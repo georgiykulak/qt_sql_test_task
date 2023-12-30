@@ -23,12 +23,12 @@ void TreeIconTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     }
     else if (index.data().canConvert<Operator>())
     {
-        /*Operator oper = qvariant_cast<Operator>(index.data());
+        Operator oper = qvariant_cast<Operator>(index.data());
 
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
 
-        oper.paint(painter, option.rect, option.palette);*/
+        oper.paint(painter, option.rect, option.palette);
     }
     else
     {
@@ -57,7 +57,7 @@ bool TreeIconTextDelegate::editorEvent(QEvent *event,
                                        const QStyleOptionViewItem &option,
                                        const QModelIndex &index)
 {
-    if (!index.data().canConvert<Country>()
+    if (index.data().canConvert<Operator>()
         && event->type() == QEvent::MouseButtonDblClick)
     {
         qDebug() << "TreeIconTextDelegate editorEvent: event type ->"

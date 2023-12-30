@@ -21,6 +21,7 @@ struct Operator
     QSize sizeHint() const;
 };
 Q_DECLARE_METATYPE(Operator);
+const int kOperatorMetaId = qRegisterMetaType<Operator>();
 
 using Operators = std::vector<Operator>;
 
