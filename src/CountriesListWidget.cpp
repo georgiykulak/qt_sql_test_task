@@ -1,5 +1,4 @@
 #include "CountriesListWidget.hpp"
-#include "CountriesOperatorsModel.hpp"
 #include "TreeIconTextDelegate.hpp"
 #include "ui_CountriesListWidget.h"
 
@@ -8,28 +7,20 @@
 #include <QTreeWidget>
 
 CountriesListWidget::CountriesListWidget(QWidget *parent)
-    : QWidget(parent)
+    : QTreeView(parent)
     , ui(new Ui::CountriesListWidget)
 {
     ui->setupUi(this);
 
     QHBoxLayout* layout = new QHBoxLayout;
-    this->setLayout(layout);
+    setLayout(layout);
 
-    m_treeView = new QTreeView(this);
-    m_treeView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_treeView->setHeaderHidden(true);
-    m_treeView->setItemDelegate(new TreeIconTextDelegate);
-
-    layout->addWidget(m_treeView);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setHeaderHidden(true);
+    setItemDelegate(new TreeIconTextDelegate);
 }
 
 CountriesListWidget::~CountriesListWidget()
 {
     delete ui;
-}
-
-void CountriesListWidget::setMyModel(std::shared_ptr<CountriesOperatorsModel> model)
-{
-    m_treeView->setModel(model.get());
 }

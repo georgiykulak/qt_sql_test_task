@@ -11,9 +11,8 @@ int main(int argc, char *argv[])
     CountriesListWidget view;
     std::shared_ptr<CountriesOperatorsModel> model
         = std::make_shared<CountriesOperatorsModel>("system.db");
-    // TODO: Connect everything in controller class
 
-    view.setMyModel(model);
+    view.setModel(model.get());
     model->DownloadSync();
     view.show();
 
