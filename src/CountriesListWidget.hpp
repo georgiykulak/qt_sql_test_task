@@ -9,6 +9,8 @@ class CountriesListWidget;
 }
 QT_END_NAMESPACE
 
+class QTreeView;
+
 class CountriesListWidget : public QWidget
 {
     Q_OBJECT
@@ -19,5 +21,6 @@ public:
 
 private:
     Ui::CountriesListWidget *ui;
+    QTreeView* m_treeView;
 };
 #endif // COUNTRIESLISTWIDGET_HPP
