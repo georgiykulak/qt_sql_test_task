@@ -10,6 +10,7 @@ class CountriesListWidget;
 QT_END_NAMESPACE
 
 class QTreeView;
+class CountriesOperatorsModel;
 
 class CountriesListWidget : public QWidget
 {
@@ -18,6 +19,8 @@ class CountriesListWidget : public QWidget
 public:
     CountriesListWidget(QWidget *parent = nullptr);
     ~CountriesListWidget();
+
+    void setMyModel(std::shared_ptr<CountriesOperatorsModel> model);
 
 private:
     Ui::CountriesListWidget *ui;

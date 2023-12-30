@@ -10,12 +10,15 @@ CONFIG += c++17
 
 SOURCES += \
     CountriesOperatorsModel.cpp \
+    TreeItem.cpp \
     main.cpp \
     CountriesListWidget.cpp
 
 HEADERS += \
     CountriesListWidget.hpp \
-    CountriesOperatorsModel.hpp
+    CountriesOperatorsModel.hpp \
+    TreeItem.hpp \
+    Utils.h
 
 FORMS += \
     CountriesListWidget.ui

@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
         = std::make_shared<CountriesOperatorsModel>("system.db");
     // TODO: Connect everything in controller class
 
+    view.setMyModel(model);
     model->DownloadSync();
     view.show();
 
