@@ -56,12 +56,6 @@ Qt::ItemFlags CountriesOperatorsModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index);
 }
 
-QVariant CountriesOperatorsModel::headerData(
-    int /* section */, Qt::Orientation /* orientation */, int /* role */) const
-{
-    return QVariant();
-}
-
 QModelIndex CountriesOperatorsModel::index(int row, int /* column */, const QModelIndex &parent) const
 {
     if (!hasIndex(row, 0, parent))

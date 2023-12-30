@@ -17,6 +17,7 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
 
     m_treeView = new QTreeView(this);
     m_treeView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_treeView->setHeaderHidden(true);
 
     layout->addWidget(m_treeView);
 }
