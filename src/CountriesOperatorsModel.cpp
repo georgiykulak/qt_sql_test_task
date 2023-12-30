@@ -7,7 +7,7 @@
 #include <QSqlRecord>
 
 CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject *parent)
-    : QObject{parent}
+    : QAbstractItemModel{parent}
     , m_database{new QSqlDatabase}
 {
     *m_database = QSqlDatabase::addDatabase("QSQLITE");
@@ -30,13 +30,53 @@ CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject 
     m_dbIsReady = true;
 }
 
+QModelIndex CountriesOperatorsModel::index(int row, int column, const QModelIndex &parent) const
+{
+    // TODO
+}
+
+QModelIndex CountriesOperatorsModel::parent(const QModelIndex &child) const
+{
+    // TODO
+}
+
+int CountriesOperatorsModel::rowCount(const QModelIndex &parent) const
+{
+    // TODO
+}
+
+int CountriesOperatorsModel::columnCount(const QModelIndex &parent) const
+{
+    // TODO
+}
+
+QVariant CountriesOperatorsModel::data(const QModelIndex &index, int role) const
+{
+    // TODO
+}
+
+QVariant CountriesOperatorsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    return QVariant();
+}
+
+Qt::ItemFlags CountriesOperatorsModel::flags(const QModelIndex &index) const
+{
+    // TODO
+}
+
 void CountriesOperatorsModel::DownloadSync()
 {
     if (!m_dbIsReady)
         return;
 
+    beginResetModel();
+
+    m_countries.clear();
+
     m_tableList = m_database->tables();
     auto tableListStr = m_tableList.join(", ");
+    // TODO: Check required db tables - 'countries' and 'operators'
 
     qDebug() << "CountriesOperatorsModel DownloadSync: List of tables:" << tableListStr;
 
@@ -58,6 +98,8 @@ void CountriesOperatorsModel::DownloadSync()
                  << "| Operators: size ="
                  << operators.size() << stringify(operators);
     }
+
+    endResetModel();
 }
 
 CountriesOperatorsModel::Operators CountriesOperatorsModel::getOperators(int mcc)
