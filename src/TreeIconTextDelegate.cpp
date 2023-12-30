@@ -1,8 +1,10 @@
 #include "TreeIconTextDelegate.hpp"
 #include "TreeItemTypes.h"
+#include "OperatorEditorDialog.hpp"
 
 #include <QDebug>
 #include <QPainter>
+#include <QEvent>
 
 TreeIconTextDelegate::TreeIconTextDelegate(QObject *parent)
     : QStyledItemDelegate{parent}
@@ -48,4 +50,22 @@ QSize TreeIconTextDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
     }
 
     return QStyledItemDelegate::sizeHint(option, index);
+}
+
+bool TreeIconTextDelegate::editorEvent(QEvent *event,
+                                       QAbstractItemModel *model,
+                                       const QStyleOptionViewItem &option,
+                                       const QModelIndex &index)
+{
+    if (!index.data().canConvert<Country>()
+        && event->type() == QEvent::MouseButtonDblClick)
+    {
+        qDebug() << "TreeIconTextDelegate editorEvent: event type ->"
+                 << event->type();
+
+        OperatorEditorDialog* dialog = new OperatorEditorDialog(model);
+        dialog->show();
+    }
+
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

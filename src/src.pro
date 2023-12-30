@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     CountriesOperatorsModel.cpp \
+    OperatorEditorDialog.cpp \
     TreeIconTextDelegate.cpp \
     TreeItem.cpp \
     TreeItemTypes.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     CountriesListWidget.hpp \
     CountriesOperatorsModel.hpp \
+    OperatorEditorDialog.hpp \
     TreeIconTextDelegate.hpp \
     TreeItem.hpp \
     TreeItemTypes.h
