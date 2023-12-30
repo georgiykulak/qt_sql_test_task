@@ -204,10 +204,9 @@ void CountriesOperatorsModel::convertCountriesToTree()
 {
     m_rootItem = new TreeItem;
 
-    for (auto&& [_, countryData] : m_countries)
+    for (const auto& [_, countryData] : m_countries)
     {
-        QVariant country;
-        country.setValue(countryData.country.name);
+        QVariant country(kCountryMetaId, &countryData.country);
         auto* cItem = new TreeItem(country, m_rootItem);
         m_rootItem->appendChild(cItem);
 

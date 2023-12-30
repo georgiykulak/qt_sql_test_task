@@ -10,15 +10,18 @@ CONFIG += c++17
 
 SOURCES += \
     CountriesOperatorsModel.cpp \
+    TreeIconTextDelegate.cpp \
     TreeItem.cpp \
+    TreeItemTypes.cpp \
     main.cpp \
     CountriesListWidget.cpp
 
 HEADERS += \
     CountriesListWidget.hpp \
     CountriesOperatorsModel.hpp \
+    TreeIconTextDelegate.hpp \
     TreeItem.hpp \
-    Utils.h
+    TreeItemTypes.h
 
 FORMS += \
     CountriesListWidget.ui
@@ -27,3 +30,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

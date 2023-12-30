@@ -11,6 +11,7 @@ QT_END_NAMESPACE
 
 class QTreeView;
 class CountriesOperatorsModel;
+class QAbstractItemDelegate;
 
 class CountriesListWidget : public QWidget
 {

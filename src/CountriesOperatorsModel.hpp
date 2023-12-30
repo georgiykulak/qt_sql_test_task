@@ -1,7 +1,7 @@
 #ifndef COUNTRIESOPERATORSMODEL_HPP
 #define COUNTRIESOPERATORSMODEL_HPP
 
-#include "Utils.h"
+#include "TreeItemTypes.h"
 
 #include <QAbstractItemModel>
 

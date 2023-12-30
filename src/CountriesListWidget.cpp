@@ -1,5 +1,6 @@
 #include "CountriesListWidget.hpp"
 #include "CountriesOperatorsModel.hpp"
+#include "TreeIconTextDelegate.hpp"
 #include "ui_CountriesListWidget.h"
 
 #include <QHBoxLayout>
@@ -18,6 +19,7 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
     m_treeView = new QTreeView(this);
     m_treeView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_treeView->setHeaderHidden(true);
+    m_treeView->setItemDelegate(new TreeIconTextDelegate);
 
     layout->addWidget(m_treeView);
 }
