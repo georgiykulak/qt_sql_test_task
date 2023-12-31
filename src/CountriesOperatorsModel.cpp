@@ -53,7 +53,7 @@ Qt::ItemFlags CountriesOperatorsModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return QAbstractItemModel::flags(index);
+    return (Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
 }
 
 QModelIndex CountriesOperatorsModel::index(int row, int /* column */, const QModelIndex &parent) const
@@ -137,14 +137,14 @@ void CountriesOperatorsModel::DownloadSync()
 
         auto operators = getOperators(mcc);
 
-        qDebug() << "CountriesOperatorsModel DownloadSync: Country ->"
+        /*qDebug() << "CountriesOperatorsModel DownloadSync: Country ->"
                  << mcc << name << code
                  << "| Operators: size ="
-                 << operators.size() << stringify(operators);
+                 << operators.size() << stringify(operators);*/
 
         CountryData countryData;
         Country country;
-        country.name = name;
+        country.name = name.trimmed();
         country.code = code;
         country.mcc = mcc;
         countryData.country = std::move(country);
@@ -171,7 +171,7 @@ Operators CountriesOperatorsModel::getOperators(int mcc)
         const auto name = queryOperators.value(fieldName).toString();
 
         Operator op;
-        op.name = name;
+        op.name = name.trimmed();
         op.mnc = mnc;
         op.mcc = mcc;
         operators.emplace_back(std::move(op));

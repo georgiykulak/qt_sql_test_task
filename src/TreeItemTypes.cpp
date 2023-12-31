@@ -38,7 +38,7 @@ QSize Operator::sizeHint() const
 
     // '5' - is number of separators in operator tree item text
     return iconSize + QSize((name.length() + mccLength + mncLength + 5)
-                             * QApplication::font().pixelSize(), 0
+                             * QApplication::font().pointSize(), 0
                       );
 }
 

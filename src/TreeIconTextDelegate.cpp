@@ -1,6 +1,6 @@
 #include "TreeIconTextDelegate.hpp"
 #include "TreeItemTypes.h"
-#include "OperatorEditorDialog.hpp"
+#include "OperatorEditor.hpp"
 
 #include <QDebug>
 #include <QPainter>
@@ -10,7 +10,9 @@ TreeIconTextDelegate::TreeIconTextDelegate(QObject *parent)
     : QStyledItemDelegate{parent}
 {}
 
-void TreeIconTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void TreeIconTextDelegate::paint(QPainter *painter,
+                                 const QStyleOptionViewItem &option,
+                                 const QModelIndex &index) const
 {
     if (index.data().canConvert<Country>())
     {
@@ -36,7 +38,8 @@ void TreeIconTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     }
 }
 
-QSize TreeIconTextDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize TreeIconTextDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
 {
     if (index.data().canConvert<Country>())
     {
@@ -52,20 +55,40 @@ QSize TreeIconTextDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
-bool TreeIconTextDelegate::editorEvent(QEvent *event,
-                                       QAbstractItemModel *model,
-                                       const QStyleOptionViewItem &option,
-                                       const QModelIndex &index)
+QWidget* TreeIconTextDelegate::createEditor(QWidget *parent,
+                                            const QStyleOptionViewItem &option,
+                                            const QModelIndex &index) const
 {
-    if (index.data().canConvert<Operator>()
-        && event->type() == QEvent::MouseButtonDblClick)
-    {
-        qDebug() << "TreeIconTextDelegate editorEvent: event type ->"
-                 << event->type();
+    Q_UNUSED(option);
 
-        OperatorEditorDialog* dialog = new OperatorEditorDialog(model);
-        dialog->show();
+    if (index.data().canConvert<Operator>())
+    {
+        Operator oper = qvariant_cast<Operator>(index.data());
+        OperatorEditor* operEditor = new OperatorEditor(oper, parent);
+        return operEditor;
     }
 
-    return QStyledItemDelegate::editorEvent(event, model, option, index);
+    return nullptr;
+}
+
+void TreeIconTextDelegate::setEditorData(QWidget *editor,
+                                         const QModelIndex &index) const
+{
+    if (index.data().canConvert<Operator>())
+    {
+        Operator oper = qvariant_cast<Operator>(index.data());
+        OperatorEditor* operEditor = qobject_cast<OperatorEditor*>(editor);
+        operEditor->setOperator(oper);
+    }
+}
+
+void TreeIconTextDelegate::setModelData(QWidget *editor,
+                                        QAbstractItemModel *model,
+                                        const QModelIndex &index) const
+{
+    if (index.data().canConvert<Operator>())
+    {
+        OperatorEditor* operEditor = qobject_cast<OperatorEditor*>(editor);
+        model->setData(index, QVariant::fromValue(operEditor->getOperator()));
+    }
 }
