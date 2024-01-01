@@ -4,6 +4,8 @@
 #include <QDialog>
 
 class QAbstractItemModel;
+class QGridLayout;
+class QHBoxLayout;
 
 class OperatorEditorDialog : public QDialog
 {
@@ -14,6 +16,12 @@ public:
 
 private:
     QAbstractItemModel* m_model;
+    void InitLayouts();
+    void AddHeaderTo(QHBoxLayout* layout);
+    void AddNameEditorTo(QGridLayout* layout);
+    void AddMccEditorTo(QGridLayout* layout);
+    void AddMncEditorTo(QGridLayout* layout);
+    void AddSaveCancelTo(QHBoxLayout* layout);
 };
 
 #endif // OPERATOREDITORDIALOG_HPP
