@@ -1,7 +1,7 @@
 #include "TreeIconTextDelegate.hpp"
 #include "TreeItemTypes.hpp"
 #include "TreeItem.hpp"
-#include "OperatorEditor.hpp"
+#include <view/OperatorEditor.hpp>
 
 #include <QDebug>
 #include <QPainter>

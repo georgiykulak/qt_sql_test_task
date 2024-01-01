@@ -9,25 +9,25 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AddOperatorButton.cpp \
-    CountriesOperatorsModel.cpp \
-    OperatorEditor.cpp \
-    OperatorEditorDialog.cpp \
-    TreeIconTextDelegate.cpp \
-    TreeItem.cpp \
-    TreeItemTypes.cpp \
     main.cpp \
-    CountriesListWidget.cpp
+    dialog/OperatorEditorDialog.cpp \
+    model/CountriesOperatorsModel.cpp \
+    model/TreeIconTextDelegate.cpp \
+    model/TreeItem.cpp \
+    model/TreeItemTypes.cpp \
+    view/CountriesListWidget.cpp \
+    view/OperatorEditor.cpp \
+    view/buttons/AddOperatorButton.cpp
 
 HEADERS += \
-    AddOperatorButton.hpp \
-    CountriesListWidget.hpp \
-    CountriesOperatorsModel.hpp \
-    OperatorEditor.hpp \
-    OperatorEditorDialog.hpp \
-    TreeIconTextDelegate.hpp \
-    TreeItem.hpp \
-    TreeItemTypes.hpp
+    dialog/OperatorEditorDialog.hpp \
+    model/CountriesOperatorsModel.hpp \
+    model/TreeIconTextDelegate.hpp \
+    model/TreeItem.hpp \
+    model/TreeItemTypes.hpp \
+    view/CountriesListWidget.hpp \
+    view/OperatorEditor.hpp \
+    view/buttons/AddOperatorButton.hpp
 
 FORMS += \
     CountriesListWidget.ui

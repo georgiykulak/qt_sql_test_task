@@ -1,6 +1,5 @@
-#include "CountriesListWidget.hpp"
-#include "CountriesOperatorsModel.hpp"
-#include "TreeIconTextDelegate.hpp"
+#include <view/CountriesListWidget.hpp>
+#include <model/CountriesOperatorsModel.hpp>
 
 #include <QApplication>
 

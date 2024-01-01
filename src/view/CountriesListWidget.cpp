@@ -1,6 +1,6 @@
 #include "CountriesListWidget.hpp"
-#include "TreeIconTextDelegate.hpp"
-#include "AddOperatorButton.hpp"
+#include <model/TreeIconTextDelegate.hpp>
+#include <view/buttons/AddOperatorButton.hpp>
 #include "ui_CountriesListWidget.h"
 
 #include <QHBoxLayout>

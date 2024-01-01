@@ -1,5 +1,4 @@
 #include "AddOperatorButton.hpp"
-#include "OperatorEditorDialog.hpp"
 
 #include <QPainter>
 

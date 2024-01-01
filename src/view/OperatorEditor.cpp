@@ -1,6 +1,6 @@
 #include "OperatorEditor.hpp"
-#include "AddOperatorButton.hpp"
-#include "OperatorEditorDialog.hpp"
+#include <dialog/OperatorEditorDialog.hpp>
+#include <view/buttons/AddOperatorButton.hpp>
 
 #include <QDebug>
 #include <QEvent>
