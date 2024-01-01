@@ -16,6 +16,12 @@ public:
     void setOperator(const Operator& op) { m_operator = op; }
     Operator getOperator() const { return m_operator; }
 
+signals:
+    void operatorData(int mcc, int mnc);
+
+public slots:
+    void onOperatorData();
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;

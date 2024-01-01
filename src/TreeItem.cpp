@@ -1,13 +1,19 @@
 #include "TreeItem.hpp"
 
-TreeItem::TreeItem(TreeItem *parentItem)
-    : m_parentItem(parentItem)
-{
+TreeItem::TreeItem(QObject *parent)
+    : QObject{parent}
+    , m_parentItem(nullptr)
+{}
 
-}
+TreeItem::TreeItem(TreeItem *parentItem, QObject* parent)
+    : QObject{parent}
+    , m_parentItem(parentItem)
+{}
 
-TreeItem::TreeItem(const QVariant& data, TreeItem *parentItem)
-    : m_itemData(data), m_parentItem(parentItem)
+TreeItem::TreeItem(const QVariant& data, TreeItem *parentItem, QObject* parent)
+    : QObject{parent}
+    , m_itemData(data)
+    , m_parentItem(parentItem)
 {}
 
 TreeItem::~TreeItem()

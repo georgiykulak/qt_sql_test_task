@@ -155,6 +155,12 @@ void CountriesOperatorsModel::DownloadSync()
     convertCountriesToTree();
 }
 
+void CountriesOperatorsModel::onOperatorData(int mcc, int mnc)
+{
+    qDebug() << "CountriesOperatorsModel onOperatorData: Received mcc =" << mcc
+             << "mnc =" << mnc;
+}
+
 Operators CountriesOperatorsModel::getOperators(int mcc)
 {
     Operators operators;
@@ -202,7 +208,11 @@ QString CountriesOperatorsModel::stringify(const Operators &operators) const
 
 void CountriesOperatorsModel::convertCountriesToTree()
 {
-    m_rootItem = new TreeItem;
+    m_rootItem = new TreeItem(nullptr, this);
+
+    // Use root tree item as gateway for signals from delegate
+    connect(m_rootItem, &TreeItem::operatorData,
+            this, &CountriesOperatorsModel::onOperatorData);
 
     for (const auto& [_, countryData] : m_countries)
     {

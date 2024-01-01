@@ -11,6 +11,9 @@ public:
 
     void mousePressEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
+
+signals:
+    void operatorData();
 };
 
 #endif // ADDOPERATORBUTTON_HPP

@@ -1,5 +1,6 @@
 #include "TreeIconTextDelegate.hpp"
 #include "TreeItemTypes.h"
+#include "TreeItem.hpp"
 #include "OperatorEditor.hpp"
 
 #include <QDebug>
@@ -65,6 +66,23 @@ QWidget* TreeIconTextDelegate::createEditor(QWidget *parent,
     {
         Operator oper = qvariant_cast<Operator>(index.data());
         OperatorEditor* operEditor = new OperatorEditor(oper, parent);
+        TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
+
+        if (!item)
+            return operEditor;
+
+        TreeItem* parentItem = item->parentItem();
+
+        // Go to root item, which is gateway for signals
+        while (parentItem)
+        {
+            item = parentItem;
+            parentItem = parentItem->parentItem();
+        }
+
+        connect(operEditor, &OperatorEditor::operatorData,
+                item, &TreeItem::operatorData);
+
         return operEditor;
     }
 

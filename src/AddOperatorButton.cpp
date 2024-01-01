@@ -13,8 +13,10 @@ void AddOperatorButton::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
-    OperatorEditorDialog* dialog = new OperatorEditorDialog(nullptr, this);
-    dialog->show();
+    emit operatorData();
+    // TODO: Move to another place
+    //OperatorEditorDialog* dialog = new OperatorEditorDialog(nullptr, this);
+    //dialog->show();
 }
 
 void AddOperatorButton::paintEvent(QPaintEvent *event)

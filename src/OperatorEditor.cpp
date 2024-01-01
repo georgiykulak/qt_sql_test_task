@@ -18,11 +18,19 @@ OperatorEditor::OperatorEditor(const Operator& op, QWidget *parent)
     m_addOperatorButton = new AddOperatorButton(this);
     m_addOperatorButton->move(m_operator.sizeHint().width(), 0);
     m_addOperatorButton->hide();
+
+    connect(m_addOperatorButton, &AddOperatorButton::operatorData,
+            this, &OperatorEditor::onOperatorData);
 }
 
 QSize OperatorEditor::sizeHint() const
 {
     return m_operator.sizeHint() + m_addOperatorButton->sizeHint();
+}
+
+void OperatorEditor::onOperatorData()
+{
+    emit operatorData(m_operator.mcc, m_operator.mnc);
 }
 
 void OperatorEditor::paintEvent(QPaintEvent *event)

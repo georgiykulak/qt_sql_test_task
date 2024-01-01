@@ -26,6 +26,10 @@ public:
 
     void DownloadSync();
 
+public slots:
+    // Required empty slot from task description
+    void onOperatorData(int mcc, int mnc);
+
 private:
     Countries m_countries;
     TreeItem* m_rootItem;

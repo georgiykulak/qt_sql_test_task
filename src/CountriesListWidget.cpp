@@ -13,6 +13,7 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
     , ui(new Ui::CountriesListWidget)
 {
     ui->setupUi(this);
+    setWindowTitle("Countries and operators");
 
     QHBoxLayout* layout = new QHBoxLayout;
     setLayout(layout);
