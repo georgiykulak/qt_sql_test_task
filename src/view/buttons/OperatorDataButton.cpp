@@ -1,14 +1,14 @@
-#include "AddOperatorButton.hpp"
+#include "OperatorDataButton.hpp"
 
 #include <QPainter>
 
-AddOperatorButton::AddOperatorButton(QWidget *parent)
+OperatorDataButton::OperatorDataButton(QWidget *parent)
     : QWidget{parent}
 {
     setMaximumSize(16, 16);
 }
 
-void AddOperatorButton::mousePressEvent(QMouseEvent *event)
+void OperatorDataButton::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
@@ -18,7 +18,7 @@ void AddOperatorButton::mousePressEvent(QMouseEvent *event)
     //dialog->show();
 }
 
-void AddOperatorButton::paintEvent(QPaintEvent *event)
+void OperatorDataButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 

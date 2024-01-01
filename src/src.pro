@@ -17,7 +17,7 @@ SOURCES += \
     model/TreeItemTypes.cpp \
     view/CountriesListWidget.cpp \
     view/OperatorEditor.cpp \
-    view/buttons/AddOperatorButton.cpp
+    view/buttons/OperatorDataButton.cpp
 
 HEADERS += \
     dialog/OperatorEditorDialog.hpp \
@@ -27,7 +27,7 @@ HEADERS += \
     model/TreeItemTypes.hpp \
     view/CountriesListWidget.hpp \
     view/OperatorEditor.hpp \
-    view/buttons/AddOperatorButton.hpp
+    view/buttons/OperatorDataButton.hpp
 
 FORMS += \
     CountriesListWidget.ui

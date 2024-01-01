@@ -5,7 +5,7 @@
 
 #include <QWidget>
 
-class AddOperatorButton;
+class OperatorDataButton;
 
 class OperatorEditor : public QWidget
 {
@@ -29,7 +29,7 @@ protected:
 
 private:
     Operator m_operator;
-    AddOperatorButton* m_addOperatorButton;
+    OperatorDataButton* m_operatorDataButton;
 };
 
 #endif // OPERATOREDITOR_HPP

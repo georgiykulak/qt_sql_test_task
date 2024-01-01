@@ -1,6 +1,6 @@
 #include "OperatorEditor.hpp"
 #include <dialog/OperatorEditorDialog.hpp>
-#include <view/buttons/AddOperatorButton.hpp>
+#include <view/buttons/OperatorDataButton.hpp>
 
 #include <QDebug>
 #include <QEvent>
@@ -15,17 +15,17 @@ OperatorEditor::OperatorEditor(const Operator& op, QWidget *parent)
     setMouseTracking(true);
     setAutoFillBackground(true);
 
-    m_addOperatorButton = new AddOperatorButton(this);
-    m_addOperatorButton->move(m_operator.sizeHint().width(), 0);
-    m_addOperatorButton->hide();
+    m_operatorDataButton = new OperatorDataButton(this);
+    m_operatorDataButton->move(m_operator.sizeHint().width(), 0);
+    m_operatorDataButton->hide();
 
-    connect(m_addOperatorButton, &AddOperatorButton::operatorData,
+    connect(m_operatorDataButton, &OperatorDataButton::operatorData,
             this, &OperatorEditor::onOperatorData);
 }
 
 QSize OperatorEditor::sizeHint() const
 {
-    return m_operator.sizeHint() + m_addOperatorButton->sizeHint();
+    return m_operator.sizeHint() + m_operatorDataButton->sizeHint();
 }
 
 void OperatorEditor::onOperatorData()
@@ -47,11 +47,11 @@ bool OperatorEditor::eventFilter(QObject *watched, QEvent *event)
     {
         if (event->type() == QEvent::Enter)
         {
-            m_addOperatorButton->show();
+            m_operatorDataButton->show();
         }
         else if (event->type() == QEvent::Leave)
         {
-            m_addOperatorButton->hide();
+            m_operatorDataButton->hide();
         }
     }
 

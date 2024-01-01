@@ -1,6 +1,6 @@
 #include "CountriesListWidget.hpp"
 #include <model/TreeIconTextDelegate.hpp>
-#include <view/buttons/AddOperatorButton.hpp>
+#include <view/buttons/OperatorDataButton.hpp>
 #include "ui_CountriesListWidget.h"
 
 #include <QHBoxLayout>
@@ -27,9 +27,9 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
     setHeaderHidden(true);
     setItemDelegate(new TreeIconTextDelegate);
 
-    AddOperatorButton* addOperatorButton = new AddOperatorButton(this);
-    addOperatorButton->move(size().width() - 35, size().height() - 35);
-    addOperatorButton->show();
+    OperatorDataButton* operatorDataButton = new OperatorDataButton(this);
+    operatorDataButton->move(size().width() - 35, size().height() - 35);
+    operatorDataButton->show();
 }
 
 CountriesListWidget::~CountriesListWidget()
