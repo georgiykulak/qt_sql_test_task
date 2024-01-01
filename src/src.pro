@@ -27,7 +27,7 @@ HEADERS += \
     OperatorEditorDialog.hpp \
     TreeIconTextDelegate.hpp \
     TreeItem.hpp \
-    TreeItemTypes.h
+    TreeItemTypes.hpp
 
 FORMS += \
     CountriesListWidget.ui

@@ -1,4 +1,4 @@
-#include "TreeItemTypes.h"
+#include "TreeItemTypes.hpp"
 
 #include <QPainter>
 #include <QApplication>

@@ -1,5 +1,5 @@
 #include "TreeIconTextDelegate.hpp"
-#include "TreeItemTypes.h"
+#include "TreeItemTypes.hpp"
 #include "TreeItem.hpp"
 #include "OperatorEditor.hpp"
 
