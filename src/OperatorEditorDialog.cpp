@@ -57,7 +57,7 @@ void OperatorEditorDialog::AddHeaderTo(QHBoxLayout *layout)
 
     QLabel* imageOperator = new QLabel(this);
     // TODO: Add method to update image by editing
-    QPixmap pixmap(":/res/Operators/202_1.png");
+    QPixmap pixmap(":/Icons/Operators/202_1.png");
     pixmap.setDevicePixelRatio(0.5);
     imageOperator->setPixmap(pixmap);
 
@@ -83,7 +83,7 @@ void OperatorEditorDialog::AddMccEditorTo(QGridLayout *layout)
     QLabel* imageCountry = new QLabel(this);
 
     // TODO: Add method to update image by editing
-    QPixmap pixmap(":/res/Countries/AU.png");
+    QPixmap pixmap(":/Icons/Countries/AU.png");
     pixmap.setDevicePixelRatio(0.75);
     imageCountry->setPixmap(pixmap);
 

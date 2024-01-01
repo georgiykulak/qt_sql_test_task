@@ -13,7 +13,7 @@ void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palet
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = QString(":/res/Operators/%1_%2.png").arg(mcc).arg(mnc);
+    auto fileName = QString(":/Icons/Operators/%1_%2.png").arg(mcc).arg(mnc);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -47,7 +47,7 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = QString(":/res/Countries/%1.png").arg(code);
+    auto fileName = QString(":/Icons/Countries/%1.png").arg(code);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
