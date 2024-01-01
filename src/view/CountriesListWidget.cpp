@@ -1,6 +1,6 @@
 #include "CountriesListWidget.hpp"
 #include <model/TreeIconTextDelegate.hpp>
-#include <view/buttons/OperatorDataButton.hpp>
+#include <view/buttons/AddOperatorButton.hpp>
 #include "ui_CountriesListWidget.h"
 
 #include <QHBoxLayout>
@@ -14,25 +14,32 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Countries and operators");
-
-    QHBoxLayout* layout = new QHBoxLayout;
-    setLayout(layout);
-
+    setMinimumSize(500, 350);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setHeaderHidden(true);
+    setItemDelegate(new TreeIconTextDelegate);
     setEditTriggers(QAbstractItemView::EditTrigger::AllEditTriggers);
     setMouseTracking(true);
     connect(this, &CountriesListWidget::entered,
             this, &CountriesListWidget::openPersistentEditor);
 
-    setHeaderHidden(true);
-    setItemDelegate(new TreeIconTextDelegate);
+    QHBoxLayout* layout = new QHBoxLayout;
+    setLayout(layout);
 
-    OperatorDataButton* operatorDataButton = new OperatorDataButton(this);
-    operatorDataButton->move(size().width() - 35, size().height() - 35);
-    operatorDataButton->show();
+    m_operatorDataButton = new AddOperatorButton(this);
+    m_operatorDataButton->move(size().width() - 50, size().height() - 50);
+    m_operatorDataButton->show();
+    m_operatorDataButton->setVisible(true);
 }
 
 CountriesListWidget::~CountriesListWidget()
 {
     delete ui;
+}
+
+void CountriesListWidget::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+
+    m_operatorDataButton->move(size().width() - 50, size().height() - 40);
 }

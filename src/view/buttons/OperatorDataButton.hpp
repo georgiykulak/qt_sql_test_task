@@ -9,11 +9,12 @@ class OperatorDataButton : public QWidget
 public:
     explicit OperatorDataButton(QWidget *parent = nullptr);
 
-    void mousePressEvent(QMouseEvent *event) override;
-    void paintEvent(QPaintEvent *event) override;
-
 signals:
     void operatorData();
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // OPERATORDATABUTTON_HPP

@@ -13,9 +13,6 @@ void OperatorDataButton::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event);
 
     emit operatorData();
-    // TODO: Move to another place
-    //OperatorEditorDialog* dialog = new OperatorEditorDialog(nullptr, this);
-    //dialog->show();
 }
 
 void OperatorDataButton::paintEvent(QPaintEvent *event)
