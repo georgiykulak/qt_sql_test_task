@@ -1,7 +1,7 @@
 #ifndef OPERATOREDITOR_HPP
 #define OPERATOREDITOR_HPP
 
-#include "TreeItemTypes.hpp"
+#include <model/TreeItemTypes.hpp>
 
 #include <QWidget>
 
