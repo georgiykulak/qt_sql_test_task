@@ -9,6 +9,11 @@
 
 class QPainter;
 
+enum CustomItemDataRole
+{
+    InsertRole = Qt::UserRole + 1
+};
+
 struct Operator
 {
     QString name;

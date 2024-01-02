@@ -31,6 +31,37 @@ CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject 
     m_dbIsReady = true;
 }
 
+bool CountriesOperatorsModel::setData(const QModelIndex &index,
+                                      const QVariant &value,
+                                      int role)
+{
+    if (role == Qt::EditRole)
+    {
+        if (!value.canConvert<Operator>())
+            return false;
+
+        Operator oper = qvariant_cast<Operator>(value);
+        const auto result = updateOperatorRecord(oper);
+
+        if (!result)
+            return false;
+
+        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+        beginResetModel();
+        item->setData(value);
+        endResetModel();
+
+        return true;
+    }
+    else if (role == InsertRole)
+    {
+        // createIndex...
+        return true;
+    }
+
+    return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////// START OF ABSTRACT ITEM MODEL INTERFACE ///////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +71,7 @@ QVariant CountriesOperatorsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole && role != Qt::EditRole)
+    if (role != Qt::DisplayRole && role != Qt::EditRole && role != InsertRole)
         return QVariant();
 
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
@@ -194,6 +225,18 @@ QString CountriesOperatorsModel::queryWhereMccIs(int mcc) const
 {
     return QString("SELECT * FROM 'operators' WHERE mcc = %1 ORDER BY mnc ASC")
            .arg(mcc);
+}
+
+bool CountriesOperatorsModel::updateOperatorRecord(const Operator &oper)
+{
+    QSqlQuery updateOperator(*m_database);
+    updateOperator.prepare("UPDATE 'operators' "
+                           "SET name = :operName "
+                           "WHERE mcc = :operMcc and mnc = :operMnc");
+    updateOperator.bindValue(":operName", oper.name);
+    updateOperator.bindValue(":operMcc", oper.mcc);
+    updateOperator.bindValue(":operMnc", oper.mnc);
+    return updateOperator.exec();
 }
 
 QString CountriesOperatorsModel::stringify(const Operators &operators) const

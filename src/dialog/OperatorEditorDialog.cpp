@@ -1,6 +1,7 @@
 #include "OperatorEditorDialog.hpp"
 #include <model/TreeItemTypes.hpp>
 
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -22,8 +23,27 @@ OperatorEditorDialog::OperatorEditorDialog(
     setMinimumSize(300, 200);
     setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_DeleteOnClose);
+    setModal(true);
 
     InitLayouts();
+}
+
+void OperatorEditorDialog::accept()
+{
+    if (m_operatorIndex)
+    {
+        Operator op = qvariant_cast<Operator>(m_operatorIndex->data());
+        op.name = m_operatorName;
+
+        QVariant oper(kOperatorMetaId, &op);
+        m_model->setData(*m_operatorIndex, oper);
+    }
+    else
+    {
+
+    }
+
+    QDialog::accept();
 }
 
 void OperatorEditorDialog::InitLayouts()
@@ -73,6 +93,8 @@ void OperatorEditorDialog::AddNameEditorTo(QGridLayout *layout)
     // TODO: Set style for the line edit
     QLineEdit* editName = new QLineEdit(this);
 
+    setUpNameLineEdit(editName);
+
     layout->addWidget(labelName, 0, 0);
     layout->addWidget(editName, 0, 1);
 }
@@ -85,6 +107,8 @@ void OperatorEditorDialog::AddMccEditorTo(QGridLayout *layout)
 
     m_imageCountry = new QLabel(this);
     updateImageCountry();
+
+    setUpMccLineEdit(editMcc);
 
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->addWidget(editMcc);
@@ -99,6 +123,8 @@ void OperatorEditorDialog::AddMncEditorTo(QGridLayout *layout)
     QLabel* labelMnc = new QLabel("MNC", this);
     // TODO: Set style for the line edit
     QLineEdit* editMnc = new QLineEdit(this);
+
+    setUpMncLineEdit(editMnc);
 
     layout->addWidget(labelMnc, 2, 0);
     layout->addWidget(editMnc, 2, 1);
@@ -190,5 +216,50 @@ void OperatorEditorDialog::updateImageCountry()
     else
     {
         drawBadImageCountry();
+    }
+}
+
+void OperatorEditorDialog::setUpNameLineEdit(QLineEdit *editName)
+{
+    if (m_operatorIndex)
+    {
+        Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
+        editName->setEnabled(true);
+        editName->setText(oper.name);
+
+        connect(editName, &QLineEdit::textChanged, this,
+                [this](const QString& newText) { m_operatorName = newText; });
+    }
+    else
+    {
+
+    }
+}
+
+void OperatorEditorDialog::setUpMccLineEdit(QLineEdit *editMcc)
+{
+    if (m_operatorIndex)
+    {
+        Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
+        editMcc->setEnabled(false);
+        editMcc->setText(QString::number(oper.mcc));
+    }
+    else
+    {
+
+    }
+}
+
+void OperatorEditorDialog::setUpMncLineEdit(QLineEdit *editMnc)
+{
+    if (m_operatorIndex)
+    {
+        Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
+        editMnc->setEnabled(false);
+        editMnc->setText(QString::number(oper.mnc));
+    }
+    else
+    {
+
     }
 }

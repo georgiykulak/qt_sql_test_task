@@ -16,6 +16,9 @@ class CountriesOperatorsModel : public QAbstractItemModel
 public:
     explicit CountriesOperatorsModel(const QString& dbPath, QObject *parent = nullptr);
 
+    bool setData(const QModelIndex &index,
+                 const QVariant &value,
+                 int role) override;
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QModelIndex index(int row, int column,
@@ -39,6 +42,7 @@ private:
 
     Operators getOperators(int mcc);
     QString queryWhereMccIs(int mcc) const;
+    bool updateOperatorRecord(const Operator& oper);
     QString stringify(const Operators& operators) const;
     void convertCountriesToTree();
 };

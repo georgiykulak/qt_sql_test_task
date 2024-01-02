@@ -2,11 +2,12 @@
 #define OPERATOREDITORDIALOG_HPP
 
 #include <QDialog>
-#include <QLabel>
 
 class QAbstractItemModel;
 class QGridLayout;
 class QHBoxLayout;
+class QLabel;
+class QLineEdit;
 
 class OperatorEditorDialog : public QDialog
 {
@@ -16,11 +17,15 @@ public:
                                   const QModelIndex* index = nullptr,
                                   QWidget* parent = nullptr);
 
+public slots:
+    void accept() override;
+
 private:
     std::shared_ptr<QAbstractItemModel> m_model;
     const QModelIndex* m_operatorIndex;
     QLabel* m_imageOperator;
     QLabel* m_imageCountry;
+    QString m_operatorName;
 
     void InitLayouts();
     void AddHeaderTo(QHBoxLayout* layout);
@@ -36,6 +41,9 @@ private:
     void drawBadImageCountry();
     void updateImageOperator();
     void updateImageCountry();
+    void setUpNameLineEdit(QLineEdit* editName);
+    void setUpMccLineEdit(QLineEdit* editMcc);
+    void setUpMncLineEdit(QLineEdit* editMnc);
 };
 
 #endif // OPERATOREDITORDIALOG_HPP
