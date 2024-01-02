@@ -3,13 +3,17 @@
 
 #include <QStyledItemDelegate>
 
+class CountriesOperatorsModel;
+
 class TreeIconTextDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
     using QStyledItemDelegate::QStyledItemDelegate;
 
-    explicit TreeIconTextDelegate(QObject *parent = nullptr);
+    explicit TreeIconTextDelegate(
+        std::shared_ptr<QAbstractItemModel> rootModel,
+        QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const override;
@@ -24,6 +28,9 @@ public:
     void setModelData(QWidget *editor,
                       QAbstractItemModel *model,
                       const QModelIndex &index) const override;
+
+private:
+    std::shared_ptr<QAbstractItemModel> m_rootModel;
 };
 
 #endif // TREEICONTEXTDELEGATE_HPP

@@ -13,7 +13,7 @@ void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palet
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = QString(":/Icons/Operators/%1_%2.png").arg(mcc).arg(mnc);
+    auto fileName = iconFileName();
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -39,7 +39,12 @@ QSize Operator::sizeHint() const
     // '5' - is number of separators in operator tree item text
     return iconSize + QSize((name.length() + mccLength + mncLength + 5)
                              * QApplication::font().pointSize(), 0
-                      );
+                            );
+}
+
+QString Operator::iconFileName() const
+{
+    return QString(":/Icons/Operators/%1_%2.png").arg(mcc).arg(mnc);
 }
 
 void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
@@ -47,7 +52,7 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = QString(":/Icons/Countries/%1.png").arg(code);
+    auto fileName = iconFileName();
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -71,4 +76,9 @@ QSize Country::sizeHint() const
 {
     return iconSize
            + QSize(name.length() * QApplication::font().pixelSize(), 0);
+}
+
+QString Country::iconFileName() const
+{
+    return QString(":/Icons/Countries/%1.png").arg(code);
 }

@@ -40,7 +40,7 @@ QVariant CountriesOperatorsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
@@ -53,7 +53,11 @@ Qt::ItemFlags CountriesOperatorsModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return (Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
+    return (Qt::ItemIsSelectable
+          | Qt::ItemIsEditable
+          | Qt::ItemIsDragEnabled
+          | Qt::ItemIsDropEnabled
+          | Qt::ItemIsEnabled);
 }
 
 QModelIndex CountriesOperatorsModel::index(int row, int /* column */, const QModelIndex &parent) const

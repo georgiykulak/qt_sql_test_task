@@ -3,8 +3,10 @@
 
 #include <QPainter>
 
-AddOperatorButton::AddOperatorButton(QWidget *parent)
+AddOperatorButton::AddOperatorButton(std::shared_ptr<QAbstractItemModel> model,
+                                     QWidget *parent)
     : QWidget{parent}
+    , m_model{model}
 {
     setMinimumSize(20, 20);
     setMaximumSize(20, 20);
@@ -14,7 +16,8 @@ void AddOperatorButton::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
-    OperatorEditorDialog* dialog = new OperatorEditorDialog(nullptr, this);
+    OperatorEditorDialog* dialog
+        = new OperatorEditorDialog(m_model, nullptr, this);
     dialog->show();
 }
 

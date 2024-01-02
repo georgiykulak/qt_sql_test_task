@@ -48,6 +48,11 @@ QVariant TreeItem::data(int /* column */) const
     return m_itemData;
 }
 
+void TreeItem::setData(const QVariant &itemData, int /* column */)
+{
+    m_itemData = itemData;
+}
+
 TreeItem *TreeItem::parentItem()
 {
     return m_parentItem;

@@ -7,8 +7,10 @@
 #include <QPainter>
 #include <QEvent>
 
-TreeIconTextDelegate::TreeIconTextDelegate(QObject *parent)
+TreeIconTextDelegate::TreeIconTextDelegate(
+    std::shared_ptr<QAbstractItemModel> rootModel, QObject *parent)
     : QStyledItemDelegate{parent}
+    , m_rootModel{rootModel}
 {}
 
 void TreeIconTextDelegate::paint(QPainter *painter,
@@ -64,8 +66,8 @@ QWidget* TreeIconTextDelegate::createEditor(QWidget *parent,
 
     if (index.data().canConvert<Operator>())
     {
-        Operator oper = qvariant_cast<Operator>(index.data());
-        OperatorEditor* operEditor = new OperatorEditor(oper, parent);
+        OperatorEditor* operEditor
+            = new OperatorEditor(m_rootModel, &index, parent);
         TreeItem* item = static_cast<TreeItem*>(index.internalPointer());
 
         if (!item)

@@ -5,16 +5,19 @@
 
 #include <QWidget>
 
+class QAbstractItemModel;
 class OperatorDataButton;
 
 class OperatorEditor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit OperatorEditor(const Operator& op, QWidget *parent = nullptr);
+    explicit OperatorEditor(std::shared_ptr<QAbstractItemModel> model,
+                            const QModelIndex* index,
+                            QWidget *parent = nullptr);
     QSize sizeHint() const override;
-    void setOperator(const Operator& op) { m_operator = op; }
-    Operator getOperator() const { return m_operator; }
+    void setOperator(const Operator& op);
+    Operator getOperator() const;
 
 signals:
     void operatorData(int mcc, int mnc);
@@ -28,7 +31,8 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    Operator m_operator;
+    std::shared_ptr<QAbstractItemModel> m_rootModel;
+    const QModelIndex* m_index;
     OperatorDataButton* m_operatorDataButton;
 };
 

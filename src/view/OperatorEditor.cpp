@@ -1,4 +1,5 @@
 #include "OperatorEditor.hpp"
+#include <model/TreeItem.hpp>
 #include <dialog/OperatorEditorDialog.hpp>
 #include <view/buttons/OperatorDataButton.hpp>
 
@@ -6,17 +7,22 @@
 #include <QEvent>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QAbstractItemModel>
 
-OperatorEditor::OperatorEditor(const Operator& op, QWidget *parent)
+OperatorEditor::OperatorEditor(std::shared_ptr<QAbstractItemModel> model,
+                               const QModelIndex* index,
+                               QWidget *parent)
     : QWidget{parent}
-    , m_operator{op}
+    , m_rootModel{model}
+    , m_index{index}
 {
     installEventFilter(this);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
     m_operatorDataButton = new OperatorDataButton(this);
-    m_operatorDataButton->move(m_operator.sizeHint().width(), 0);
+    Operator oper = qvariant_cast<Operator>(m_index->data());
+    m_operatorDataButton->move(oper.sizeHint().width(), 0);
     m_operatorDataButton->hide();
 
     connect(m_operatorDataButton, &OperatorDataButton::operatorData,
@@ -25,12 +31,26 @@ OperatorEditor::OperatorEditor(const Operator& op, QWidget *parent)
 
 QSize OperatorEditor::sizeHint() const
 {
-    return m_operator.sizeHint() + m_operatorDataButton->sizeHint();
+    Operator oper = qvariant_cast<Operator>(m_index->data());
+    return oper.sizeHint() + m_operatorDataButton->sizeHint();
+}
+
+void OperatorEditor::setOperator(const Operator &op)
+{
+    TreeItem *item = static_cast<TreeItem*>(m_index->internalPointer());
+    QVariant oper(kOperatorMetaId, &op);
+    item->setData(oper);
+}
+
+Operator OperatorEditor::getOperator() const
+{
+    return qvariant_cast<Operator>(m_index->data());
 }
 
 void OperatorEditor::onOperatorData()
 {
-    emit operatorData(m_operator.mcc, m_operator.mnc);
+    Operator oper = qvariant_cast<Operator>(m_index->data());
+    emit operatorData(oper.mcc, oper.mnc);
 }
 
 void OperatorEditor::paintEvent(QPaintEvent *event)
@@ -38,7 +58,8 @@ void OperatorEditor::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
-    m_operator.paint(&painter, rect(), palette());
+    Operator oper = qvariant_cast<Operator>(m_index->data());
+    oper.paint(&painter, rect(), palette());
 }
 
 bool OperatorEditor::eventFilter(QObject *watched, QEvent *event)
@@ -62,7 +83,8 @@ void OperatorEditor::mousePressEvent(QMouseEvent *event)
 {
     if (event->type() == QEvent::MouseButtonDblClick)
     {
-        OperatorEditorDialog* dialog = new OperatorEditorDialog(nullptr, this);
+        OperatorEditorDialog* dialog
+            = new OperatorEditorDialog(m_rootModel, m_index, this);
         dialog->show();
     }
 }

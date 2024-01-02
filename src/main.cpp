@@ -7,11 +7,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    CountriesListWidget view;
     std::shared_ptr<CountriesOperatorsModel> model
         = std::make_shared<CountriesOperatorsModel>("system.db");
+    CountriesListWidget view(model);
 
-    view.setModel(model.get());
     model->DownloadSync();
     view.show();
 

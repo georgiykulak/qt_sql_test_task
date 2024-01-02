@@ -1,4 +1,5 @@
 #include "CountriesListWidget.hpp"
+#include <model/CountriesOperatorsModel.hpp>
 #include <model/TreeIconTextDelegate.hpp>
 #include <view/buttons/AddOperatorButton.hpp>
 #include "ui_CountriesListWidget.h"
@@ -8,16 +9,21 @@
 #include <QTreeWidget>
 #include <QGraphicsAnchorLayout>
 
-CountriesListWidget::CountriesListWidget(QWidget *parent)
+CountriesListWidget::CountriesListWidget(
+    std::shared_ptr<QAbstractItemModel> model,
+    QWidget *parent)
     : QTreeView(parent)
     , ui(new Ui::CountriesListWidget)
 {
     ui->setupUi(this);
+
+    setModel(model.get());
+
     setWindowTitle("Countries and operators");
     setMinimumSize(500, 350);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setHeaderHidden(true);
-    setItemDelegate(new TreeIconTextDelegate);
+    setItemDelegate(new TreeIconTextDelegate(model));
     setEditTriggers(QAbstractItemView::EditTrigger::AllEditTriggers);
     setMouseTracking(true);
     connect(this, &CountriesListWidget::entered,
@@ -26,7 +32,7 @@ CountriesListWidget::CountriesListWidget(QWidget *parent)
     QHBoxLayout* layout = new QHBoxLayout;
     setLayout(layout);
 
-    m_operatorDataButton = new AddOperatorButton(this);
+    m_operatorDataButton = new AddOperatorButton(model, this);
     m_operatorDataButton->move(size().width() - 50, size().height() - 50);
     m_operatorDataButton->show();
     m_operatorDataButton->setVisible(true);

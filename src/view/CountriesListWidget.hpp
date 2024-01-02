@@ -9,14 +9,15 @@ class CountriesListWidget;
 }
 QT_END_NAMESPACE
 
+class CountriesOperatorsModel;
 class AddOperatorButton;
 
 class CountriesListWidget : public QTreeView
 {
     Q_OBJECT
-
 public:
-    CountriesListWidget(QWidget *parent = nullptr);
+    CountriesListWidget(std::shared_ptr<QAbstractItemModel> model,
+                        QWidget *parent = nullptr);
     ~CountriesListWidget();
 
 protected:

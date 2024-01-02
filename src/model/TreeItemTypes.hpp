@@ -19,6 +19,7 @@ struct Operator
                const QRect& rect,
                const QPalette &palette) const;
     QSize sizeHint() const;
+    QString iconFileName() const;
 };
 Q_DECLARE_METATYPE(Operator);
 const int kOperatorMetaId = qRegisterMetaType<Operator>();
@@ -35,6 +36,7 @@ struct Country
                const QRect& rect,
                const QPalette &palette) const;
     QSize sizeHint() const;
+    QString iconFileName() const;
 };
 Q_DECLARE_METATYPE(Country);
 const int kCountryMetaId = qRegisterMetaType<Country>();
