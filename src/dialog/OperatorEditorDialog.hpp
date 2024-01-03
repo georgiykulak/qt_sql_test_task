@@ -50,7 +50,8 @@ private:
     void drawBadImageCountry();
     void updateImageOperator();
     void updateImageCountry();
-    void setImageCountryByCode(const QString& code);
+    void setImageCountry(const QString& code);
+    bool setImageOperator(int mcc, int mnc);
     void setUpNameLineEdit(StringFieldEdit* editName);
     void setUpMccLineEdit(IntFieldEdit* editMcc);
     void setUpMncLineEdit(IntFieldEdit* editMnc);

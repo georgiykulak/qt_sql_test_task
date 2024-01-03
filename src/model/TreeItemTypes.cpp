@@ -10,7 +10,7 @@ void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palet
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = iconFileName();
+    auto fileName = iconFileName(mcc, mnc);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -43,7 +43,7 @@ QString Operator::text() const
     return QString("%1 (%2, %3)").arg(name).arg(mcc).arg(mnc);
 }
 
-QString Operator::iconFileName() const
+QString Operator::iconFileName(int mcc, int mnc)
 {
     return QString(":/Icons/Operators/%1_%2.png").arg(mcc).arg(mnc);
 }

@@ -213,10 +213,8 @@ void OperatorEditorDialog::updateImageOperator()
     if (m_operatorIndex)
     {
         Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
-        auto fileName = oper.iconFileName();
-        QPixmap pixmap(fileName);
-        pixmap.setDevicePixelRatio(0.5);
-        m_imageOperator->setPixmap(pixmap);
+
+        setImageOperator(oper.mcc, oper.mnc);
     }
     else
     {
@@ -231,7 +229,7 @@ void OperatorEditorDialog::updateImageCountry()
         QModelIndex countryIndex = m_model->parent(*m_operatorIndex);
         Country country = qvariant_cast<Country>(countryIndex.data());
 
-        setImageCountryByCode(country.code);
+        setImageCountry(country.code);
     }
     else
     {
@@ -239,12 +237,25 @@ void OperatorEditorDialog::updateImageCountry()
     }
 }
 
-void OperatorEditorDialog::setImageCountryByCode(const QString& code)
+void OperatorEditorDialog::setImageCountry(const QString& code)
 {
     auto fileName = Country::iconFileName(code);
     QPixmap pixmap(fileName);
     pixmap.setDevicePixelRatio(0.75);
     m_imageCountry->setPixmap(pixmap);
+}
+
+bool OperatorEditorDialog::setImageOperator(int mcc, int mnc)
+{
+    auto fileName = Operator::iconFileName(mcc, mnc);
+    QPixmap pixmap;
+    if (!pixmap.load(fileName))
+        return false;
+
+    pixmap.setDevicePixelRatio(0.5);
+    m_imageOperator->setPixmap(pixmap);
+
+    return true;
 }
 
 void OperatorEditorDialog::setUpNameLineEdit(StringFieldEdit* editName)
@@ -296,7 +307,7 @@ void OperatorEditorDialog::setUpMccLineEdit(IntFieldEdit* editMcc)
                     }
 
                     editMcc->setValid(true);
-                    setImageCountryByCode(code);
+                    setImageCountry(code);
                     m_operatorMcc = mcc;
                 });
         connect(editMcc, &IntFieldEdit::validStateChanged,
@@ -319,7 +330,13 @@ void OperatorEditorDialog::setUpMncLineEdit(IntFieldEdit* editMnc)
         editMnc->setText("0");
 
         connect(editMnc, &IntFieldEdit::numberChangedAndValid,
-                this, [this](int mnc){ m_operatorMnc = mnc; });
+                this, [this](int mnc)
+                {
+                    if (!setImageOperator(m_operatorMcc, mnc))
+                        drawBadImageOperator();
+
+                    m_operatorMnc = mnc;
+                });
         connect(editMnc, &IntFieldEdit::validStateChanged,
                 this, [this](bool valid){ m_operatorMncValid = valid; });
     }

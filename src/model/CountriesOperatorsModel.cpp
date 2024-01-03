@@ -52,21 +52,44 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
     }
     else if (role == InsertRole && value.canConvert<Operator>())
     {
-        Operator oper = qvariant_cast<Operator>(value);
+        const Operator oper = qvariant_cast<Operator>(value);
         const auto& allCountryItems = m_rootItem->childs();
         TreeItem* countryItem = nullptr;
 
         for (TreeItem* cItem : allCountryItems)
         {
-            if (cItem && cItem->data().canConvert<Country>())
+            if ( !(cItem && cItem->data().canConvert<Country>()) )
+                continue;
+
+            Country country = qvariant_cast<Country>(cItem->data());
+            if (country.mcc != oper.mcc)
+                continue;
+
+            // country.mcc == oper.mcc
+            for (TreeItem* oItem : cItem->childs())
             {
-                Country country = qvariant_cast<Country>(cItem->data());
-                if (country.mcc == oper.mcc)
+                if ( !(oItem && oItem->data().canConvert<Operator>()) )
+                    continue;
+
+                // If operator with such 'mcc' and 'mnc' is already exists,
+                // we should update it, not create copy of it with another name
+                const Operator xOper = qvariant_cast<Operator>(oItem->data());
+                if (xOper.mnc == oper.mnc)
                 {
-                    countryItem = cItem;
-                    break;
+                    const auto result = updateOperatorRecord(oper);
+                    if (result)
+                    {
+                        beginResetModel();
+                        oItem->setData(value);
+                        endResetModel();
+                    }
+
+                    return result;
                 }
             }
+
+            countryItem = cItem;
+            break;
         }
 
         if (!countryItem)
@@ -194,10 +217,6 @@ void CountriesOperatorsModel::DownloadSync()
                        "Missing required tables:" << missingList.join(", ");
         return;
     }
-
-    const auto tableListStr = tableList.join(", ");
-    qDebug() << "CountriesOperatorsModel DownloadSync: List of tables:"
-             << tableListStr;
 
     QSqlQuery queryAllCountries("SELECT * FROM 'countries'", *m_database);
     const auto fieldMcc = queryAllCountries.record().indexOf("mcc");

@@ -28,7 +28,8 @@ struct Operator
                const QPalette &palette) const;
     QSize sizeHint() const;
     QString text() const;
-    QString iconFileName() const;
+
+    static QString iconFileName(int mcc, int mnc);
 };
 Q_DECLARE_METATYPE(Operator);
 const int kOperatorMetaId = qRegisterMetaType<Operator>();
