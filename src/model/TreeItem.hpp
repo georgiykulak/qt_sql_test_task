@@ -20,7 +20,6 @@ public:
     TreeItem *child(int row);
     const QVector<TreeItem*>& childs() const;
     int childCount() const;
-    int columnCount() const;
     QVariant data() const;
     void setData(const QVariant& itemData, int column = 0);
     int row() const;

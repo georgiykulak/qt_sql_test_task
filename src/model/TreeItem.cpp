@@ -43,11 +43,6 @@ int TreeItem::childCount() const
     return m_childItems.count();
 }
 
-int TreeItem::columnCount() const
-{
-    return 1;
-}
-
 QVariant TreeItem::data() const
 {
     return m_itemData;

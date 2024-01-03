@@ -1,35 +1,17 @@
 #include "CountriesOperatorsModel.hpp"
+#include <model/SqlDatabaseModel.hpp>
 #include "TreeItem.hpp"
 
 #include <QDebug>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QSqlRecord>
 
 CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject *parent)
     : QAbstractItemModel{parent}
-    , m_database{new QSqlDatabase}
-{
-    *m_database = QSqlDatabase::addDatabase("QSQLITE");
+    , m_databaseModel{new SqlDatabaseModel(dbPath)}
+{}
 
-    if (!m_database)
-    {
-        qCritical() << "CountriesOperatorsModel: Can't initialize database";
-        return;
-    }
-
-    m_database->setDatabaseName(dbPath);
-
-    if (!m_database->open())
-    {
-        qCritical() << "CountriesOperatorsModel:" << m_database->lastError().text();
-        return;
-    }
-
-    qDebug() << "CountriesOperatorsModel: Database is ready";
-    m_dbIsReady = true;
-}
+///////////////////////////////////////////////////////////////////////////////
+//////////////////// START OF ABSTRACT ITEM MODEL INTERFACE ///////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 bool CountriesOperatorsModel::setData(const QModelIndex &index,
                                       const QVariant &value,
@@ -38,7 +20,7 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
     if (role == Qt::EditRole && value.canConvert<Operator>())
     {
         Operator oper = qvariant_cast<Operator>(value);
-        const auto result = updateOperatorRecord(oper);
+        const auto result = m_databaseModel->UpdateOperatorRecord(oper);
 
         if (!result)
             return false;
@@ -76,7 +58,8 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
                 const Operator xOper = qvariant_cast<Operator>(oItem->data());
                 if (xOper.mnc == oper.mnc)
                 {
-                    const auto result = updateOperatorRecord(oper);
+                    const auto result
+                        = m_databaseModel->UpdateOperatorRecord(oper);
                     if (result)
                     {
                         beginResetModel();
@@ -95,7 +78,7 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
         if (!countryItem)
             return false;
 
-        const auto result = insertOperatorRecord(oper);
+        const auto result = m_databaseModel->InsertOperatorRecord(oper);
 
         if (!result)
             return false;
@@ -109,10 +92,6 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
 
     return false;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-//////////////////// START OF ABSTRACT ITEM MODEL INTERFACE ///////////////////
-///////////////////////////////////////////////////////////////////////////////
 
 QVariant CountriesOperatorsModel::data(const QModelIndex &index, int role) const
 {
@@ -196,48 +175,7 @@ int CountriesOperatorsModel::columnCount(const QModelIndex& /* parent */) const
 
 void CountriesOperatorsModel::DownloadSync()
 {
-    if (!m_dbIsReady)
-        return;
-
-    m_countries.clear();
-
-    auto&& tableList = m_database->tables();
-
-    const auto countriesAreMissing = !tableList.contains("countries");
-    const auto operatorsAreMissing = !tableList.contains("operators");
-    if (countriesAreMissing || operatorsAreMissing)
-    {
-        QStringList missingList;
-        if (countriesAreMissing) missingList << "countries";
-        if (operatorsAreMissing) missingList << "operators";
-
-        qCritical() << "CountriesOperatorsModel DownloadSync: "
-                       "Missing required tables:" << missingList.join(", ");
-        return;
-    }
-
-    QSqlQuery queryAllCountries("SELECT * FROM 'countries'", *m_database);
-    const auto fieldMcc = queryAllCountries.record().indexOf("mcc");
-    const auto fieldName = queryAllCountries.record().indexOf("name");
-    const auto fieldCode = queryAllCountries.record().indexOf("code");
-
-    while (queryAllCountries.next())
-    {
-        const auto mcc = queryAllCountries.value(fieldMcc).toInt();
-        const auto name = queryAllCountries.value(fieldName).toString();
-        const auto code = queryAllCountries.value(fieldCode).toString();
-
-        auto operators = getOperators(mcc);
-
-        CountryData countryData;
-        Country country;
-        country.name = name.trimmed();
-        country.code = code;
-        country.mcc = mcc;
-        countryData.country = std::move(country);
-        countryData.operators = std::move(operators);
-        m_countries[mcc] = std::move(countryData);
-    }
+    m_databaseModel->DownloadSync();
 
     convertCountriesToTree();
 }
@@ -266,74 +204,6 @@ void CountriesOperatorsModel::getCountryCodeByMcc(int mcc, QString &code)
     }
 }
 
-Operators CountriesOperatorsModel::getOperators(int mcc)
-{
-    Operators operators;
-
-    QSqlQuery queryOperators(queryWhereMccIs(mcc), *m_database);
-    const auto fieldMnc = queryOperators.record().indexOf("mnc");
-    const auto fieldMcc = queryOperators.record().indexOf("mcc");
-    const auto fieldName = queryOperators.record().indexOf("name");
-
-    while (queryOperators.next())
-    {
-        const auto mnc = queryOperators.value(fieldMnc).toInt();
-        const auto mcc = queryOperators.value(fieldMcc).toInt();
-        const auto name = queryOperators.value(fieldName).toString();
-
-        Operator op;
-        op.name = name.trimmed();
-        op.mnc = mnc;
-        op.mcc = mcc;
-        operators.emplace_back(std::move(op));
-    }
-
-    return operators;
-}
-
-QString CountriesOperatorsModel::queryWhereMccIs(int mcc) const
-{
-    return QString("SELECT * FROM 'operators' WHERE mcc = %1 ORDER BY mnc ASC")
-           .arg(mcc);
-}
-
-bool CountriesOperatorsModel::updateOperatorRecord(const Operator &oper)
-{
-    QSqlQuery updateOperator(*m_database);
-    updateOperator.prepare("UPDATE 'operators' "
-                           "SET name = :operName "
-                           "WHERE mcc = :operMcc and mnc = :operMnc");
-    updateOperator.bindValue(":operName", oper.name);
-    updateOperator.bindValue(":operMcc", oper.mcc);
-    updateOperator.bindValue(":operMnc", oper.mnc);
-    return updateOperator.exec();
-}
-
-bool CountriesOperatorsModel::insertOperatorRecord(const Operator &oper)
-{
-    QSqlQuery insertOperator(*m_database);
-    insertOperator.prepare("INSERT INTO 'operators' (name, mcc, mnc)"
-                           "VALUES (:operName, :operMcc, :operMnc)");
-    insertOperator.bindValue(":operName", oper.name);
-    insertOperator.bindValue(":operMcc", oper.mcc);
-    insertOperator.bindValue(":operMnc", oper.mnc);
-    return insertOperator.exec();
-}
-
-QString CountriesOperatorsModel::stringify(const Operators &operators) const
-{
-    QString res;
-
-    for (auto&& [name, _, mnc] : operators)
-    {
-        res.append(
-            QString("{%1:'%2'} ").arg(mnc).arg(name)
-        );
-    }
-
-    return res;
-}
-
 void CountriesOperatorsModel::convertCountriesToTree()
 {
     m_rootItem = new TreeItem(nullptr, this);
@@ -342,7 +212,7 @@ void CountriesOperatorsModel::convertCountriesToTree()
     connect(m_rootItem, &TreeItem::operatorData,
             this, &CountriesOperatorsModel::onOperatorData);
 
-    for (const auto& [_, countryData] : m_countries)
+    for (const auto& [_, countryData] : m_databaseModel->GetCountries())
     {
         QVariant country(kCountryMetaId, &countryData.country);
         auto* cItem = new TreeItem(country, m_rootItem);

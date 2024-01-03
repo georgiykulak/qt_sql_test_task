@@ -13,6 +13,7 @@ SOURCES += \
     main.cpp \
     dialog/OperatorEditorDialog.cpp \
     model/CountriesOperatorsModel.cpp \
+    model/SqlDatabaseModel.cpp \
     model/TreeIconTextDelegate.cpp \
     model/TreeItem.cpp \
     model/TreeItemTypes.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     ProxyStyle.hpp \
     dialog/OperatorEditorDialog.hpp \
     model/CountriesOperatorsModel.hpp \
+    model/SqlDatabaseModel.hpp \
     model/TreeIconTextDelegate.hpp \
     model/TreeItem.hpp \
     model/TreeItemTypes.hpp \

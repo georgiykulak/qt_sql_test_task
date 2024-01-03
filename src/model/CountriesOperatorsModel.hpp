@@ -8,7 +8,7 @@
 #include <memory>
 
 class TreeItem;
-class QSqlDatabase;
+class SqlDatabaseModel;
 
 class CountriesOperatorsModel : public QAbstractItemModel
 {
@@ -36,16 +36,9 @@ public slots:
     void getCountryCodeByMcc(int mcc, QString& code);
 
 private:
-    Countries m_countries;
     TreeItem* m_rootItem;
-    std::shared_ptr<QSqlDatabase> m_database;
-    bool m_dbIsReady = false;
+    std::shared_ptr<SqlDatabaseModel> m_databaseModel;
 
-    Operators getOperators(int mcc);
-    QString queryWhereMccIs(int mcc) const;
-    bool updateOperatorRecord(const Operator& oper);
-    bool insertOperatorRecord(const Operator& oper);
-    QString stringify(const Operators& operators) const;
     void convertCountriesToTree();
 };
 
