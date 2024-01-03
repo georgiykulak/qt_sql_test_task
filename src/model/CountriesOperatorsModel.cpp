@@ -15,7 +15,7 @@ CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject 
 
     if (!m_database)
     {
-        qWarning() << "CountriesOperatorsModel: Can't initialize database";
+        qCritical() << "CountriesOperatorsModel: Can't initialize database";
         return;
     }
 
@@ -23,7 +23,7 @@ CountriesOperatorsModel::CountriesOperatorsModel(const QString& dbPath, QObject 
 
     if (!m_database->open())
     {
-        qWarning() << "CountriesOperatorsModel:" << m_database->lastError().text();
+        qCritical() << "CountriesOperatorsModel:" << m_database->lastError().text();
         return;
     }
 
@@ -180,11 +180,24 @@ void CountriesOperatorsModel::DownloadSync()
 
     m_countries.clear();
 
-    m_tableList = m_database->tables();
-    auto tableListStr = m_tableList.join(", ");
-    // TODO: Check required db tables - 'countries' and 'operators'
+    auto&& tableList = m_database->tables();
 
-    qDebug() << "CountriesOperatorsModel DownloadSync: List of tables:" << tableListStr;
+    const auto countriesAreMissing = !tableList.contains("countries");
+    const auto operatorsAreMissing = !tableList.contains("operators");
+    if (countriesAreMissing || operatorsAreMissing)
+    {
+        QStringList missingList;
+        if (countriesAreMissing) missingList << "countries";
+        if (operatorsAreMissing) missingList << "operators";
+
+        qCritical() << "CountriesOperatorsModel DownloadSync: "
+                       "Missing required tables:" << missingList.join(", ");
+        return;
+    }
+
+    const auto tableListStr = tableList.join(", ");
+    qDebug() << "CountriesOperatorsModel DownloadSync: List of tables:"
+             << tableListStr;
 
     QSqlQuery queryAllCountries("SELECT * FROM 'countries'", *m_database);
     const auto fieldMcc = queryAllCountries.record().indexOf("mcc");

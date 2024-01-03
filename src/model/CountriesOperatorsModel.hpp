@@ -38,7 +38,6 @@ public slots:
 private:
     Countries m_countries;
     TreeItem* m_rootItem;
-    QStringList m_tableList;
     std::shared_ptr<QSqlDatabase> m_database;
     bool m_dbIsReady = false;
 
