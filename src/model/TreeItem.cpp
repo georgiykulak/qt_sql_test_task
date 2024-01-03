@@ -33,6 +33,11 @@ TreeItem *TreeItem::child(int row)
     return m_childItems.at(row);
 }
 
+const QVector<TreeItem*>& TreeItem::childs() const
+{
+    return m_childItems;
+}
+
 int TreeItem::childCount() const
 {
     return m_childItems.count();
@@ -43,7 +48,7 @@ int TreeItem::columnCount() const
     return 1;
 }
 
-QVariant TreeItem::data(int /* column */) const
+QVariant TreeItem::data() const
 {
     return m_itemData;
 }

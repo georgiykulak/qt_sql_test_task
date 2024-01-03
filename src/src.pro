@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ProxyStyle.cpp \
     main.cpp \
     dialog/OperatorEditorDialog.cpp \
     model/CountriesOperatorsModel.cpp \
@@ -18,9 +19,13 @@ SOURCES += \
     view/CountriesListWidget.cpp \
     view/OperatorEditor.cpp \
     view/buttons/AddOperatorButton.cpp \
-    view/buttons/OperatorDataButton.cpp
+    view/buttons/OperatorDataButton.cpp \
+    view/line_edits/IFieldEdit.cpp \
+    view/line_edits/IntFieldEdit.cpp \
+    view/line_edits/StringFieldEdit.cpp
 
 HEADERS += \
+    ProxyStyle.hpp \
     dialog/OperatorEditorDialog.hpp \
     model/CountriesOperatorsModel.hpp \
     model/TreeIconTextDelegate.hpp \
@@ -29,7 +34,10 @@ HEADERS += \
     view/CountriesListWidget.hpp \
     view/OperatorEditor.hpp \
     view/buttons/AddOperatorButton.hpp \
-    view/buttons/OperatorDataButton.hpp
+    view/buttons/OperatorDataButton.hpp \
+    view/line_edits/IFieldEdit.hpp \
+    view/line_edits/IntFieldEdit.hpp \
+    view/line_edits/StringFieldEdit.hpp
 
 FORMS += \
     CountriesListWidget.ui

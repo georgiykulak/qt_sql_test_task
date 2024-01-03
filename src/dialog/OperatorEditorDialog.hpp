@@ -7,7 +7,8 @@ class QAbstractItemModel;
 class QGridLayout;
 class QHBoxLayout;
 class QLabel;
-class QLineEdit;
+class StringFieldEdit;
+class IntFieldEdit;
 
 class OperatorEditorDialog : public QDialog
 {
@@ -26,6 +27,11 @@ private:
     QLabel* m_imageOperator;
     QLabel* m_imageCountry;
     QString m_operatorName;
+    int m_operatorMcc;
+    int m_operatorMnc;
+    bool m_operatorNameValid = false;
+    bool m_operatorMccValid = false;
+    bool m_operatorMncValid = true;
 
     void InitLayouts();
     void AddHeaderTo(QHBoxLayout* layout);
@@ -41,9 +47,9 @@ private:
     void drawBadImageCountry();
     void updateImageOperator();
     void updateImageCountry();
-    void setUpNameLineEdit(QLineEdit* editName);
-    void setUpMccLineEdit(QLineEdit* editMcc);
-    void setUpMncLineEdit(QLineEdit* editMnc);
+    void setUpNameLineEdit(StringFieldEdit* editName);
+    void setUpMccLineEdit(IntFieldEdit* editMcc);
+    void setUpMncLineEdit(IntFieldEdit* editMnc);
 };
 
 #endif // OPERATOREDITORDIALOG_HPP

@@ -43,6 +43,7 @@ private:
     Operators getOperators(int mcc);
     QString queryWhereMccIs(int mcc) const;
     bool updateOperatorRecord(const Operator& oper);
+    bool insertOperatorRecord(const Operator& oper);
     QString stringify(const Operators& operators) const;
     void convertCountriesToTree();
 };

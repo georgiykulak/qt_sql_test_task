@@ -1,5 +1,7 @@
 #include "OperatorEditorDialog.hpp"
 #include <model/TreeItemTypes.hpp>
+#include <view/line_edits/IntFieldEdit.hpp>
+#include <view/line_edits/StringFieldEdit.hpp>
 
 #include <QDebug>
 #include <QVBoxLayout>
@@ -7,10 +9,10 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPixmap>
 #include <QPainter>
 #include <QAbstractItemModel>
+#include <QMessageBox>
 
 OperatorEditorDialog::OperatorEditorDialog(
     std::shared_ptr<QAbstractItemModel> model,
@@ -37,13 +39,36 @@ void OperatorEditorDialog::accept()
 
         QVariant oper(kOperatorMetaId, &op);
         m_model->setData(*m_operatorIndex, oper);
+
+        QDialog::accept();
+    }
+    else if (m_operatorNameValid && m_operatorMccValid && m_operatorMncValid)
+    {
+        Operator op;
+        op.name = m_operatorName;
+        op.mcc = m_operatorMcc;
+        op.mnc = m_operatorMnc;
+
+        QVariant oper(kOperatorMetaId, &op);
+        m_model->setData(QModelIndex(), oper, InsertRole);
+
+        QDialog::accept();
     }
     else
     {
+        QStringList invalidFields;
+        if (!m_operatorNameValid) invalidFields << "name";
+        if (!m_operatorMccValid) invalidFields << "mcc";
+        if (!m_operatorMncValid) invalidFields << "mnc";
 
+        QMessageBox::information(
+            this, tr("Invalid operator!"),
+            tr(invalidFields.size() > 1 ? "Those fields are" : "This field is")
+            + tr(" invalid: ") + invalidFields.join(", ") +
+            tr(".\nPlease enter valid information and try again."),
+            QMessageBox::Ok
+        );
     }
-
-    QDialog::accept();
 }
 
 void OperatorEditorDialog::InitLayouts()
@@ -89,9 +114,8 @@ void OperatorEditorDialog::AddHeaderTo(QHBoxLayout *layout)
 void OperatorEditorDialog::AddNameEditorTo(QGridLayout *layout)
 {
     QLabel* labelName = new QLabel("Name", this);
-    // TODO: Add clear button
-    // TODO: Set style for the line edit
-    QLineEdit* editName = new QLineEdit(this);
+    QColor background = palette().color(QPalette::Window);
+    StringFieldEdit* editName = new StringFieldEdit(background, this);
 
     setUpNameLineEdit(editName);
 
@@ -102,8 +126,8 @@ void OperatorEditorDialog::AddNameEditorTo(QGridLayout *layout)
 void OperatorEditorDialog::AddMccEditorTo(QGridLayout *layout)
 {
     QLabel* labelMcc = new QLabel("MCC", this);
-    // TODO: Set style for the line edit
-    QLineEdit* editMcc = new QLineEdit(this);
+    QColor background = palette().color(QPalette::Window);
+    IntFieldEdit* editMcc = new IntFieldEdit(background, this);
 
     m_imageCountry = new QLabel(this);
     updateImageCountry();
@@ -121,8 +145,8 @@ void OperatorEditorDialog::AddMccEditorTo(QGridLayout *layout)
 void OperatorEditorDialog::AddMncEditorTo(QGridLayout *layout)
 {
     QLabel* labelMnc = new QLabel("MNC", this);
-    // TODO: Set style for the line edit
-    QLineEdit* editMnc = new QLineEdit(this);
+    QColor background = palette().color(QPalette::Window);
+    IntFieldEdit* editMnc = new IntFieldEdit(background, this);
 
     setUpMncLineEdit(editMnc);
 
@@ -159,7 +183,6 @@ void OperatorEditorDialog::drawQuestionMark(QLabel* source,
     font.setPixelSize(pixSize);
     painter.setFont(font);
     QPen pen;
-    pen.setColor(Qt::black);
     pen.setBrush(Qt::black);
     painter.setPen(pen);
 
@@ -219,47 +242,69 @@ void OperatorEditorDialog::updateImageCountry()
     }
 }
 
-void OperatorEditorDialog::setUpNameLineEdit(QLineEdit *editName)
+void OperatorEditorDialog::setUpNameLineEdit(StringFieldEdit* editName)
 {
     if (m_operatorIndex)
     {
         Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
-        editName->setEnabled(true);
         editName->setText(oper.name);
-
-        connect(editName, &QLineEdit::textChanged, this,
-                [this](const QString& newText) { m_operatorName = newText; });
+        m_operatorName = oper.name;
+        m_operatorNameValid = true;
     }
     else
     {
-
+        editName->setValid(false);
     }
+
+    connect(editName, &StringFieldEdit::textChangedAndValid,
+            this, [this](const QString& text) { m_operatorName = text; });
+    connect(editName, &StringFieldEdit::validStateChanged,
+            this, [this](bool valid){ m_operatorNameValid = valid; });
 }
 
-void OperatorEditorDialog::setUpMccLineEdit(QLineEdit *editMcc)
+void OperatorEditorDialog::setUpMccLineEdit(IntFieldEdit* editMcc)
 {
     if (m_operatorIndex)
     {
         Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
-        editMcc->setEnabled(false);
         editMcc->setText(QString::number(oper.mcc));
+        editMcc->setDisabled();
+        m_operatorMcc = oper.mcc;
+        m_operatorMccValid = true;
     }
     else
     {
+        editMcc->setText("0");
+        editMcc->setValid(false);
 
+        connect(editMcc, &IntFieldEdit::numberChangedAndValid,
+                this, [this](int mcc)
+                {
+                    // TODO: Change country icon dynamically
+                    m_operatorMcc = mcc;
+                });
+        connect(editMcc, &IntFieldEdit::validStateChanged,
+                this, [this](bool valid){ m_operatorMccValid = valid; });
     }
 }
 
-void OperatorEditorDialog::setUpMncLineEdit(QLineEdit *editMnc)
+void OperatorEditorDialog::setUpMncLineEdit(IntFieldEdit* editMnc)
 {
     if (m_operatorIndex)
     {
         Operator oper = qvariant_cast<Operator>(m_operatorIndex->data());
-        editMnc->setEnabled(false);
         editMnc->setText(QString::number(oper.mnc));
+        editMnc->setDisabled();
+        m_operatorMnc = oper.mnc;
+        m_operatorMncValid = true;
     }
     else
     {
+        editMnc->setText("0");
 
+        connect(editMnc, &IntFieldEdit::numberChangedAndValid,
+                this, [this](int mnc){ m_operatorMnc = mnc; });
+        connect(editMnc, &IntFieldEdit::validStateChanged,
+                this, [this](bool valid){ m_operatorMncValid = valid; });
     }
 }

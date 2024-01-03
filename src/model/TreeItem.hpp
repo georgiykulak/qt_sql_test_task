@@ -18,9 +18,10 @@ public:
 
     void appendChild(TreeItem *child);
     TreeItem *child(int row);
+    const QVector<TreeItem*>& childs() const;
     int childCount() const;
     int columnCount() const;
-    QVariant data(int column = 0) const;
+    QVariant data() const;
     void setData(const QVariant& itemData, int column = 0);
     int row() const;
     TreeItem *parentItem();

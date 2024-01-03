@@ -35,11 +35,8 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
                                       const QVariant &value,
                                       int role)
 {
-    if (role == Qt::EditRole)
+    if (role == Qt::EditRole && value.canConvert<Operator>())
     {
-        if (!value.canConvert<Operator>())
-            return false;
-
         Operator oper = qvariant_cast<Operator>(value);
         const auto result = updateOperatorRecord(oper);
 
@@ -53,9 +50,39 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
 
         return true;
     }
-    else if (role == InsertRole)
+    else if (role == InsertRole && value.canConvert<Operator>())
     {
-        // createIndex...
+        Operator oper = qvariant_cast<Operator>(value);
+        const auto& allCountryItems = m_rootItem->childs();
+        TreeItem* countryItem = nullptr;
+
+        for (TreeItem* cItem : allCountryItems)
+        {
+            if (cItem && cItem->data().canConvert<Country>())
+            {
+                Country country = qvariant_cast<Country>(cItem->data());
+                if (country.mcc == oper.mcc)
+                {
+                    countryItem = cItem;
+                    break;
+                }
+            }
+        }
+
+        if (!countryItem)
+            return false;
+
+        const auto result = insertOperatorRecord(oper);
+
+        if (!result)
+            return false;
+
+        const auto rowCount = countryItem->childCount();
+        TreeItem* newOperItem = new TreeItem(value, countryItem);
+        QModelIndex newOperIndex = createIndex(rowCount, 0, newOperItem);
+        beginInsertRows(newOperIndex, rowCount, rowCount + 1);
+        countryItem->appendChild(newOperItem);
+        endInsertRows();
         return true;
     }
 
@@ -237,6 +264,17 @@ bool CountriesOperatorsModel::updateOperatorRecord(const Operator &oper)
     updateOperator.bindValue(":operMcc", oper.mcc);
     updateOperator.bindValue(":operMnc", oper.mnc);
     return updateOperator.exec();
+}
+
+bool CountriesOperatorsModel::insertOperatorRecord(const Operator &oper)
+{
+    QSqlQuery insertOperator(*m_database);
+    insertOperator.prepare("INSERT INTO 'operators' (name, mcc, mnc)"
+                           "VALUES (:operName, :operMcc, :operMnc)");
+    insertOperator.bindValue(":operName", oper.name);
+    insertOperator.bindValue(":operMcc", oper.mcc);
+    insertOperator.bindValue(":operMnc", oper.mnc);
+    return insertOperator.exec();
 }
 
 QString CountriesOperatorsModel::stringify(const Operators &operators) const
