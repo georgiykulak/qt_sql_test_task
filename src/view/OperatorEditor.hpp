@@ -23,7 +23,7 @@ signals:
     void operatorData(int mcc, int mnc);
 
 public slots:
-    void onOperatorData();
+    void OnOperatorData();
 
 protected:
     void paintEvent(QPaintEvent *event) override;

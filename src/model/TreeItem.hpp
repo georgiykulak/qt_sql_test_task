@@ -10,20 +10,20 @@ class TreeItem : public QObject
     Q_OBJECT
 public:
     explicit TreeItem(QObject* parent = nullptr);
-    explicit TreeItem(TreeItem *parentItem = nullptr, QObject* parent = nullptr);
+    explicit TreeItem(TreeItem *ParentItem = nullptr, QObject* parent = nullptr);
     explicit TreeItem(const QVariant& data,
-                      TreeItem *parentItem = nullptr,
+                      TreeItem *ParentItem = nullptr,
                       QObject* parent = nullptr);
     virtual ~TreeItem();
 
-    void appendChild(TreeItem *child);
-    TreeItem *child(int row);
-    const QVector<TreeItem*>& childs() const;
-    int childCount() const;
-    QVariant data() const;
-    void setData(const QVariant& itemData, int column = 0);
-    int row() const;
-    TreeItem *parentItem();
+    void AppendChild(TreeItem *child);
+    TreeItem *Child(int row);
+    const QVector<TreeItem*>& Childs() const;
+    int ChildCount() const;
+    QVariant Data() const;
+    void SetData(const QVariant& itemData, int column = 0);
+    int Row() const;
+    TreeItem *ParentItem();
 
 signals:
     void operatorData(int mcc, int mnc);

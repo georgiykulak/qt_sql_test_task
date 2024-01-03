@@ -24,25 +24,25 @@ OperatorEditor::OperatorEditor(std::shared_ptr<CountriesOperatorsModel> model,
     m_operatorDataButton = new OperatorDataButton(this);
     Operator oper = qvariant_cast<Operator>(m_index->data());
     m_operatorDataButton->move(
-        fontMetrics().boundingRect(oper.text()).width() + iconSize.first * 2,
+        fontMetrics().boundingRect(oper.Text()).width() + iconSize.first * 2,
         0);
     m_operatorDataButton->hide();
 
     connect(m_operatorDataButton, &OperatorDataButton::operatorData,
-            this, &OperatorEditor::onOperatorData);
+            this, &OperatorEditor::OnOperatorData);
 }
 
 QSize OperatorEditor::sizeHint() const
 {
     Operator oper = qvariant_cast<Operator>(m_index->data());
-    return oper.sizeHint() + m_operatorDataButton->sizeHint();
+    return oper.SizeHint() + m_operatorDataButton->sizeHint();
 }
 
 void OperatorEditor::setOperator(const Operator &op)
 {
     TreeItem *item = static_cast<TreeItem*>(m_index->internalPointer());
     QVariant oper(kOperatorMetaId, &op);
-    item->setData(oper);
+    item->SetData(oper);
 }
 
 Operator OperatorEditor::getOperator() const
@@ -50,7 +50,7 @@ Operator OperatorEditor::getOperator() const
     return qvariant_cast<Operator>(m_index->data());
 }
 
-void OperatorEditor::onOperatorData()
+void OperatorEditor::OnOperatorData()
 {
     Operator oper = qvariant_cast<Operator>(m_index->data());
     emit operatorData(oper.mcc, oper.mnc);
@@ -62,7 +62,7 @@ void OperatorEditor::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     Operator oper = qvariant_cast<Operator>(m_index->data());
-    oper.paint(&painter, rect(), palette());
+    oper.Paint(&painter, rect(), palette());
 }
 
 bool OperatorEditor::eventFilter(QObject *watched, QEvent *event)

@@ -32,7 +32,7 @@ public:
 
 public slots:
     // Required empty slot from task description
-    void onOperatorData(int mcc, int mnc);
+    void OnOperatorData(int mcc, int mnc);
     void getCountryCodeByMcc(int mcc, QString& code);
 
 private:

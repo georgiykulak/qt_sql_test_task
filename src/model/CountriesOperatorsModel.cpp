@@ -27,7 +27,7 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
 
         TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
         beginResetModel();
-        item->setData(value);
+        item->SetData(value);
         endResetModel();
 
         return true;
@@ -35,27 +35,27 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
     else if (role == InsertRole && value.canConvert<Operator>())
     {
         const Operator oper = qvariant_cast<Operator>(value);
-        const auto& allCountryItems = m_rootItem->childs();
+        const auto& allCountryItems = m_rootItem->Childs();
         TreeItem* countryItem = nullptr;
 
         for (TreeItem* cItem : allCountryItems)
         {
-            if ( !(cItem && cItem->data().canConvert<Country>()) )
+            if ( !(cItem && cItem->Data().canConvert<Country>()) )
                 continue;
 
-            Country country = qvariant_cast<Country>(cItem->data());
+            Country country = qvariant_cast<Country>(cItem->Data());
             if (country.mcc != oper.mcc)
                 continue;
 
             // country.mcc == oper.mcc
-            for (TreeItem* oItem : cItem->childs())
+            for (TreeItem* oItem : cItem->Childs())
             {
-                if ( !(oItem && oItem->data().canConvert<Operator>()) )
+                if ( !(oItem && oItem->Data().canConvert<Operator>()) )
                     continue;
 
                 // If operator with such 'mcc' and 'mnc' is already exists,
                 // we should update it, not create copy of it with another name
-                const Operator xOper = qvariant_cast<Operator>(oItem->data());
+                const Operator xOper = qvariant_cast<Operator>(oItem->Data());
                 if (xOper.mnc == oper.mnc)
                 {
                     const auto result
@@ -63,7 +63,7 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
                     if (result)
                     {
                         beginResetModel();
-                        oItem->setData(value);
+                        oItem->SetData(value);
                         endResetModel();
                     }
 
@@ -85,7 +85,7 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
 
         TreeItem* newOperItem = new TreeItem(value, countryItem);
         beginResetModel();
-        countryItem->appendChild(newOperItem);
+        countryItem->AppendChild(newOperItem);
         endResetModel();
         return true;
     }
@@ -103,7 +103,7 @@ QVariant CountriesOperatorsModel::data(const QModelIndex &index, int role) const
 
     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
 
-    return item->data();
+    return item->Data();
 }
 
 Qt::ItemFlags CountriesOperatorsModel::flags(const QModelIndex &index) const
@@ -130,7 +130,7 @@ QModelIndex CountriesOperatorsModel::index(int row, int /* column */, const QMod
     else
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
 
-    TreeItem *childItem = parentItem->child(row);
+    TreeItem *childItem = parentItem->Child(row);
     if (childItem)
         return createIndex(row, 0, childItem);
     return QModelIndex();
@@ -142,12 +142,12 @@ QModelIndex CountriesOperatorsModel::parent(const QModelIndex &index) const
         return QModelIndex();
 
     TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
-    TreeItem *parentItem = childItem->parentItem();
+    TreeItem *parentItem = childItem->ParentItem();
 
     if (parentItem == m_rootItem)
         return QModelIndex();
 
-    return createIndex(parentItem->row(), 0, parentItem);
+    return createIndex(parentItem->Row(), 0, parentItem);
 }
 
 int CountriesOperatorsModel::rowCount(const QModelIndex &parent) const
@@ -161,7 +161,7 @@ int CountriesOperatorsModel::rowCount(const QModelIndex &parent) const
     else
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
 
-    return parentItem->childCount();
+    return parentItem->ChildCount();
 }
 
 int CountriesOperatorsModel::columnCount(const QModelIndex& /* parent */) const
@@ -180,21 +180,21 @@ void CountriesOperatorsModel::DownloadSync()
     convertCountriesToTree();
 }
 
-void CountriesOperatorsModel::onOperatorData(int mcc, int mnc)
+void CountriesOperatorsModel::OnOperatorData(int mcc, int mnc)
 {
-    qDebug() << "CountriesOperatorsModel onOperatorData: Received mcc =" << mcc
+    qDebug() << "CountriesOperatorsModel OnOperatorData: Received mcc =" << mcc
              << "mnc =" << mnc;
 }
 
 void CountriesOperatorsModel::getCountryCodeByMcc(int mcc, QString &code)
 {
-    const auto& allCountryItems = m_rootItem->childs();
+    const auto& allCountryItems = m_rootItem->Childs();
 
     for (TreeItem* cItem : allCountryItems)
     {
-        if (cItem && cItem->data().canConvert<Country>())
+        if (cItem && cItem->Data().canConvert<Country>())
         {
-            Country country = qvariant_cast<Country>(cItem->data());
+            Country country = qvariant_cast<Country>(cItem->Data());
             if (country.mcc == mcc)
             {
                 code = country.code;
@@ -210,19 +210,19 @@ void CountriesOperatorsModel::convertCountriesToTree()
 
     // Use root tree item as gateway for signals from delegate
     connect(m_rootItem, &TreeItem::operatorData,
-            this, &CountriesOperatorsModel::onOperatorData);
+            this, &CountriesOperatorsModel::OnOperatorData);
 
     for (const auto& [_, countryData] : m_databaseModel->GetCountries())
     {
         QVariant country(kCountryMetaId, &countryData.country);
         auto* cItem = new TreeItem(country, m_rootItem);
-        m_rootItem->appendChild(cItem);
+        m_rootItem->AppendChild(cItem);
 
         for (const auto& op : countryData.operators)
         {
             QVariant oper(kOperatorMetaId, &op);
             auto* oItem = new TreeItem(oper, cItem);
-            cItem->appendChild(oItem);
+            cItem->AppendChild(oItem);
         }
     }
 }

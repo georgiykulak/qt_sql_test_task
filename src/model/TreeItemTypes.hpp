@@ -23,13 +23,13 @@ struct Operator
     int mnc;
     int mcc;
 
-    void paint(QPainter* painter,
+    void Paint(QPainter* painter,
                const QRect& rect,
                const QPalette &palette) const;
-    QSize sizeHint() const;
-    QString text() const;
+    QSize SizeHint() const;
+    QString Text() const;
 
-    static QString iconFileName(int mcc, int mnc);
+    static QString IconFileName(int mcc, int mnc);
 };
 Q_DECLARE_METATYPE(Operator);
 const int kOperatorMetaId = qRegisterMetaType<Operator>();
@@ -42,12 +42,12 @@ struct Country
     QString code;
     int mcc;
 
-    void paint(QPainter* painter,
+    void Paint(QPainter* painter,
                const QRect& rect,
                const QPalette &palette) const;
-    QSize sizeHint() const;
+    QSize SizeHint() const;
 
-    static QString iconFileName(const QString& code);
+    static QString IconFileName(const QString& code);
 };
 Q_DECLARE_METATYPE(Country);
 const int kCountryMetaId = qRegisterMetaType<Country>();

@@ -15,7 +15,7 @@
 #include <QMessageBox>
 
 OperatorEditorDialog::OperatorEditorDialog(
-    std::shared_ptr<CountriesOperatorsModel> model,
+    const std::shared_ptr<CountriesOperatorsModel>& model,
     const QModelIndex* index,
     QWidget *parent)
     : QDialog{parent}
@@ -239,7 +239,7 @@ void OperatorEditorDialog::updateImageCountry()
 
 void OperatorEditorDialog::setImageCountry(const QString& code)
 {
-    auto fileName = Country::iconFileName(code);
+    auto fileName = Country::IconFileName(code);
     QPixmap pixmap(fileName);
     pixmap.setDevicePixelRatio(0.75);
     m_imageCountry->setPixmap(pixmap);
@@ -247,7 +247,7 @@ void OperatorEditorDialog::setImageCountry(const QString& code)
 
 bool OperatorEditorDialog::setImageOperator(int mcc, int mnc)
 {
-    auto fileName = Operator::iconFileName(mcc, mnc);
+    auto fileName = Operator::IconFileName(mcc, mnc);
     QPixmap pixmap;
     if (!pixmap.load(fileName))
         return false;

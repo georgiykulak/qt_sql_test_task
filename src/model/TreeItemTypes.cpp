@@ -5,12 +5,12 @@
 #include <QIcon>
 #include <QPalette>
 
-void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
+void Operator::Paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = iconFileName(mcc, mnc);
+    auto fileName = IconFileName(mcc, mnc);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -23,11 +23,11 @@ void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palet
 
     textPen.setBrush(palette.windowText());
     painter->setPen(textPen);
-    painter->drawText(textOffset, Qt::AlignLeft, text());
+    painter->drawText(textOffset, Qt::AlignLeft, Text());
     painter->restore();
 }
 
-QSize Operator::sizeHint() const
+QSize Operator::SizeHint() const
 {
     const auto mccLength = QString::number(mcc).length();
     const auto mncLength = QString::number(mnc).length();
@@ -38,22 +38,22 @@ QSize Operator::sizeHint() const
                   * QApplication::font().pointSize(), 0);
 }
 
-QString Operator::text() const
+QString Operator::Text() const
 {
     return QString("%1 (%2, %3)").arg(name).arg(mcc).arg(mnc);
 }
 
-QString Operator::iconFileName(int mcc, int mnc)
+QString Operator::IconFileName(int mcc, int mnc)
 {
     return QString(":/Icons/Operators/%1_%2.png").arg(mcc).arg(mnc);
 }
 
-void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
+void Country::Paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
 {
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = iconFileName(code);
+    auto fileName = IconFileName(code);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -73,13 +73,13 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
     painter->restore();
 }
 
-QSize Country::sizeHint() const
+QSize Country::SizeHint() const
 {
     return QSize(iconSize.first, iconSize.second)
            + QSize(name.length() * QApplication::font().pixelSize(), 0);
 }
 
-QString Country::iconFileName(const QString& code)
+QString Country::IconFileName(const QString& code)
 {
     return QString(":/Icons/Countries/%1.png").arg(code);
 }

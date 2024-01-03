@@ -24,7 +24,7 @@ void TreeIconTextDelegate::paint(QPainter *painter,
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
 
-        country.paint(painter, option.rect, option.palette);
+        country.Paint(painter, option.rect, option.palette);
     }
     else if (index.data().canConvert<Operator>())
     {
@@ -33,7 +33,7 @@ void TreeIconTextDelegate::paint(QPainter *painter,
         if (option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
 
-        oper.paint(painter, option.rect, option.palette);
+        oper.Paint(painter, option.rect, option.palette);
     }
     else
     {
@@ -47,12 +47,12 @@ QSize TreeIconTextDelegate::sizeHint(const QStyleOptionViewItem &option,
     if (index.data().canConvert<Country>())
     {
         Country country = qvariant_cast<Country>(index.data());
-        return country.sizeHint();
+        return country.SizeHint();
     }
     else if (index.data().canConvert<Operator>())
     {
         Operator oper = qvariant_cast<Operator>(index.data());
-        return oper.sizeHint();
+        return oper.SizeHint();
     }
 
     return QStyledItemDelegate::sizeHint(option, index);
@@ -73,13 +73,13 @@ QWidget* TreeIconTextDelegate::createEditor(QWidget *parent,
         if (!item)
             return operEditor;
 
-        TreeItem* parentItem = item->parentItem();
+        TreeItem* parentItem = item->ParentItem();
 
         // Go to root item, which is gateway for signals
         while (parentItem)
         {
             item = parentItem;
-            parentItem = parentItem->parentItem();
+            parentItem = parentItem->ParentItem();
         }
 
         connect(operEditor, &OperatorEditor::operatorData,
