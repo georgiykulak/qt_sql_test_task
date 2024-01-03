@@ -5,9 +5,6 @@
 #include <QIcon>
 #include <QPalette>
 
-static constexpr QSize iconSize(16, 16);
-static constexpr int spaceSize = 4;
-
 void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palette) const
 {
     painter->save();
@@ -18,16 +15,15 @@ void Operator::paint(QPainter *painter, const QRect &rect, const QPalette &palet
 
     icon.paint(painter, rect, Qt::AlignLeft);
 
-    auto text = QString("%1 (%2, %3)").arg(name).arg(mcc).arg(mnc);
     QPen textPen;
     QRect textOffset(
-        rect.left() + iconSize.width() + spaceSize, rect.top(),
-        rect.width() - iconSize.width() - spaceSize, rect.height()
+        rect.left() + iconSize.first + spaceSize, rect.top(),
+        rect.width() - iconSize.first - spaceSize, rect.height()
     );
 
     textPen.setBrush(palette.windowText());
     painter->setPen(textPen);
-    painter->drawText(textOffset, Qt::AlignLeft, text);
+    painter->drawText(textOffset, Qt::AlignLeft, text());
     painter->restore();
 }
 
@@ -37,9 +33,14 @@ QSize Operator::sizeHint() const
     const auto mncLength = QString::number(mnc).length();
 
     // '5' - is number of separators in operator tree item text
-    return iconSize + QSize((name.length() + mccLength + mncLength + 5)
-                             * QApplication::font().pointSize(), 0
-                            );
+    return QSize(iconSize.first, iconSize.second)
+          + QSize((name.length() + mccLength + mncLength + 5)
+                  * QApplication::font().pointSize(), 0);
+}
+
+QString Operator::text() const
+{
+    return QString("%1 (%2, %3)").arg(name).arg(mcc).arg(mnc);
 }
 
 QString Operator::iconFileName() const
@@ -60,8 +61,8 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
     QPen textPen;
     QFont font = painter->font();
     QRect textOffset(
-        rect.left() + iconSize.width() + spaceSize, rect.top(),
-        rect.width() - iconSize.width() - spaceSize, rect.height()
+        rect.left() + iconSize.first + spaceSize, rect.top(),
+        rect.width() - iconSize.first - spaceSize, rect.height()
     );
 
     font.setBold(true);
@@ -74,7 +75,7 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
 
 QSize Country::sizeHint() const
 {
-    return iconSize
+    return QSize(iconSize.first, iconSize.second)
            + QSize(name.length() * QApplication::font().pixelSize(), 0);
 }
 

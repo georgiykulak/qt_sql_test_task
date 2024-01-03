@@ -14,6 +14,9 @@ enum CustomItemDataRole
     InsertRole = Qt::UserRole + 1
 };
 
+constexpr std::pair<int, int> iconSize(16, 16);
+constexpr int spaceSize = 4;
+
 struct Operator
 {
     QString name;
@@ -24,6 +27,7 @@ struct Operator
                const QRect& rect,
                const QPalette &palette) const;
     QSize sizeHint() const;
+    QString text() const;
     QString iconFileName() const;
 };
 Q_DECLARE_METATYPE(Operator);

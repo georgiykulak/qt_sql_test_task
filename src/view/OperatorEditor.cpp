@@ -23,7 +23,9 @@ OperatorEditor::OperatorEditor(std::shared_ptr<CountriesOperatorsModel> model,
 
     m_operatorDataButton = new OperatorDataButton(this);
     Operator oper = qvariant_cast<Operator>(m_index->data());
-    m_operatorDataButton->move(oper.sizeHint().width(), 0);
+    m_operatorDataButton->move(
+        fontMetrics().boundingRect(oper.text()).width() + iconSize.first * 2,
+        0);
     m_operatorDataButton->hide();
 
     connect(m_operatorDataButton, &OperatorDataButton::operatorData,
