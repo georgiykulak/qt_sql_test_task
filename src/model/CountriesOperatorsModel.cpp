@@ -100,12 +100,10 @@ bool CountriesOperatorsModel::setData(const QModelIndex &index,
         if (!result)
             return false;
 
-        const auto rowCount = countryItem->childCount();
         TreeItem* newOperItem = new TreeItem(value, countryItem);
-        QModelIndex newOperIndex = createIndex(rowCount, 0, newOperItem);
-        beginInsertRows(newOperIndex, rowCount, rowCount + 1);
+        beginResetModel();
         countryItem->appendChild(newOperItem);
-        endInsertRows();
+        endResetModel();
         return true;
     }
 

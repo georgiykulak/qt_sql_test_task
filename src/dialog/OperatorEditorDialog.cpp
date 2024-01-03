@@ -303,11 +303,15 @@ void OperatorEditorDialog::setUpMccLineEdit(IntFieldEdit* editMcc)
                     {
                         editMcc->setValid(false);
                         drawBadImageCountry();
+                        drawBadImageOperator();
                         return;
                     }
 
                     editMcc->setValid(true);
                     setImageCountry(code);
+                    if (!setImageOperator(mcc, m_operatorMnc))
+                        drawBadImageOperator();
+
                     m_operatorMcc = mcc;
                 });
         connect(editMcc, &IntFieldEdit::validStateChanged,
