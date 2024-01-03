@@ -1,5 +1,5 @@
 #include "OperatorEditorDialog.hpp"
-#include <model/TreeItemTypes.hpp>
+#include <model/CountriesOperatorsModel.hpp>
 #include <view/line_edits/IntFieldEdit.hpp>
 #include <view/line_edits/StringFieldEdit.hpp>
 
@@ -15,7 +15,7 @@
 #include <QMessageBox>
 
 OperatorEditorDialog::OperatorEditorDialog(
-    std::shared_ptr<QAbstractItemModel> model,
+    std::shared_ptr<CountriesOperatorsModel> model,
     const QModelIndex* index,
     QWidget *parent)
     : QDialog{parent}
@@ -231,15 +231,20 @@ void OperatorEditorDialog::updateImageCountry()
         QModelIndex countryIndex = m_model->parent(*m_operatorIndex);
         Country country = qvariant_cast<Country>(countryIndex.data());
 
-        auto fileName = country.iconFileName();
-        QPixmap pixmap(fileName);
-        pixmap.setDevicePixelRatio(0.75);
-        m_imageCountry->setPixmap(pixmap);
+        setImageCountryByCode(country.code);
     }
     else
     {
         drawBadImageCountry();
     }
+}
+
+void OperatorEditorDialog::setImageCountryByCode(const QString& code)
+{
+    auto fileName = Country::iconFileName(code);
+    QPixmap pixmap(fileName);
+    pixmap.setDevicePixelRatio(0.75);
+    m_imageCountry->setPixmap(pixmap);
 }
 
 void OperatorEditorDialog::setUpNameLineEdit(StringFieldEdit* editName)
@@ -278,9 +283,20 @@ void OperatorEditorDialog::setUpMccLineEdit(IntFieldEdit* editMcc)
         editMcc->setValid(false);
 
         connect(editMcc, &IntFieldEdit::numberChangedAndValid,
-                this, [this](int mcc)
+                this, [this, editMcc](int mcc)
                 {
-                    // TODO: Change country icon dynamically
+                    QString code;
+                    emit retrieveCountryCodeByMcc(mcc, code);
+
+                    if (code.isEmpty())
+                    {
+                        editMcc->setValid(false);
+                        drawBadImageCountry();
+                        return;
+                    }
+
+                    editMcc->setValid(true);
+                    setImageCountryByCode(code);
                     m_operatorMcc = mcc;
                 });
         connect(editMcc, &IntFieldEdit::validStateChanged,

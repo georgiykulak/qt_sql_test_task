@@ -10,7 +10,7 @@
 #include <QGraphicsAnchorLayout>
 
 CountriesListWidget::CountriesListWidget(
-    std::shared_ptr<QAbstractItemModel> model,
+    std::shared_ptr<CountriesOperatorsModel> model,
     QWidget *parent)
     : QTreeView(parent)
     , ui(new Ui::CountriesListWidget)

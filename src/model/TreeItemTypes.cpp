@@ -52,7 +52,7 @@ void Country::paint(QPainter *painter, const QRect &rect, const QPalette &palett
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    auto fileName = iconFileName();
+    auto fileName = iconFileName(code);
     QIcon icon(fileName);
 
     icon.paint(painter, rect, Qt::AlignLeft);
@@ -78,7 +78,7 @@ QSize Country::sizeHint() const
            + QSize(name.length() * QApplication::font().pixelSize(), 0);
 }
 
-QString Country::iconFileName() const
+QString Country::iconFileName(const QString& code)
 {
     return QString(":/Icons/Countries/%1.png").arg(code);
 }

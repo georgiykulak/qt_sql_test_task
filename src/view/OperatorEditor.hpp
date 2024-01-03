@@ -5,14 +5,14 @@
 
 #include <QWidget>
 
-class QAbstractItemModel;
+class CountriesOperatorsModel;
 class OperatorDataButton;
 
 class OperatorEditor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit OperatorEditor(std::shared_ptr<QAbstractItemModel> model,
+    explicit OperatorEditor(std::shared_ptr<CountriesOperatorsModel> model,
                             const QModelIndex* index,
                             QWidget *parent = nullptr);
     QSize sizeHint() const override;
@@ -31,7 +31,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    std::shared_ptr<QAbstractItemModel> m_rootModel;
+    std::shared_ptr<CountriesOperatorsModel> m_rootModel;
     const QModelIndex* m_index;
     OperatorDataButton* m_operatorDataButton;
 };

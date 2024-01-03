@@ -199,11 +199,6 @@ void CountriesOperatorsModel::DownloadSync()
 
         auto operators = getOperators(mcc);
 
-        /*qDebug() << "CountriesOperatorsModel DownloadSync: Country ->"
-                 << mcc << name << code
-                 << "| Operators: size ="
-                 << operators.size() << stringify(operators);*/
-
         CountryData countryData;
         Country country;
         country.name = name.trimmed();
@@ -221,6 +216,24 @@ void CountriesOperatorsModel::onOperatorData(int mcc, int mnc)
 {
     qDebug() << "CountriesOperatorsModel onOperatorData: Received mcc =" << mcc
              << "mnc =" << mnc;
+}
+
+void CountriesOperatorsModel::getCountryCodeByMcc(int mcc, QString &code)
+{
+    const auto& allCountryItems = m_rootItem->childs();
+
+    for (TreeItem* cItem : allCountryItems)
+    {
+        if (cItem && cItem->data().canConvert<Country>())
+        {
+            Country country = qvariant_cast<Country>(cItem->data());
+            if (country.mcc == mcc)
+            {
+                code = country.code;
+                return;
+            }
+        }
+    }
 }
 
 Operators CountriesOperatorsModel::getOperators(int mcc)

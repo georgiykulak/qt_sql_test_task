@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class QAbstractItemModel;
+class CountriesOperatorsModel;
 class QGridLayout;
 class QHBoxLayout;
 class QLabel;
@@ -14,15 +14,18 @@ class OperatorEditorDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OperatorEditorDialog(std::shared_ptr<QAbstractItemModel> model,
+    explicit OperatorEditorDialog(std::shared_ptr<CountriesOperatorsModel> model,
                                   const QModelIndex* index = nullptr,
                                   QWidget* parent = nullptr);
+
+signals:
+    void retrieveCountryCodeByMcc(int mcc, QString& code);
 
 public slots:
     void accept() override;
 
 private:
-    std::shared_ptr<QAbstractItemModel> m_model;
+    std::shared_ptr<CountriesOperatorsModel> m_model;
     const QModelIndex* m_operatorIndex;
     QLabel* m_imageOperator;
     QLabel* m_imageCountry;
@@ -47,6 +50,7 @@ private:
     void drawBadImageCountry();
     void updateImageOperator();
     void updateImageCountry();
+    void setImageCountryByCode(const QString& code);
     void setUpNameLineEdit(StringFieldEdit* editName);
     void setUpMccLineEdit(IntFieldEdit* editMcc);
     void setUpMncLineEdit(IntFieldEdit* editMnc);

@@ -1,5 +1,6 @@
 #include "OperatorEditor.hpp"
 #include <model/TreeItem.hpp>
+#include <model/CountriesOperatorsModel.hpp>
 #include <dialog/OperatorEditorDialog.hpp>
 #include <view/buttons/OperatorDataButton.hpp>
 
@@ -9,7 +10,7 @@
 #include <QMouseEvent>
 #include <QAbstractItemModel>
 
-OperatorEditor::OperatorEditor(std::shared_ptr<QAbstractItemModel> model,
+OperatorEditor::OperatorEditor(std::shared_ptr<CountriesOperatorsModel> model,
                                const QModelIndex* index,
                                QWidget *parent)
     : QWidget{parent}

@@ -3,13 +3,13 @@
 
 #include <QWidget>
 
-class QAbstractItemModel;
+class CountriesOperatorsModel;
 
 class AddOperatorButton : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AddOperatorButton(std::shared_ptr<QAbstractItemModel> model,
+    explicit AddOperatorButton(std::shared_ptr<CountriesOperatorsModel> model,
                                QWidget *parent = nullptr);
 
 protected:
@@ -17,7 +17,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    std::shared_ptr<QAbstractItemModel> m_model;
+    std::shared_ptr<CountriesOperatorsModel> m_model;
 };
 
 #endif // ADDOPERATORBUTTON_HPP

@@ -18,8 +18,9 @@ public:
 
     bool setData(const QModelIndex &index,
                  const QVariant &value,
-                 int role) override;
-    QVariant data(const QModelIndex &index, int role) const override;
+                 int role = Qt::EditRole) override;
+    QVariant data(const QModelIndex &index,
+                  int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
@@ -32,6 +33,7 @@ public:
 public slots:
     // Required empty slot from task description
     void onOperatorData(int mcc, int mnc);
+    void getCountryCodeByMcc(int mcc, QString& code);
 
 private:
     Countries m_countries;

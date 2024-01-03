@@ -8,7 +8,7 @@
 #include <QEvent>
 
 TreeIconTextDelegate::TreeIconTextDelegate(
-    std::shared_ptr<QAbstractItemModel> rootModel, QObject *parent)
+    std::shared_ptr<CountriesOperatorsModel> rootModel, QObject *parent)
     : QStyledItemDelegate{parent}
     , m_rootModel{rootModel}
 {}

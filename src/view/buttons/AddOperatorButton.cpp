@@ -1,10 +1,12 @@
 #include "AddOperatorButton.hpp"
+#include <model/CountriesOperatorsModel.hpp>
 #include <dialog/OperatorEditorDialog.hpp>
 
 #include <QPainter>
 
-AddOperatorButton::AddOperatorButton(std::shared_ptr<QAbstractItemModel> model,
-                                     QWidget *parent)
+AddOperatorButton::AddOperatorButton(
+    std::shared_ptr<CountriesOperatorsModel> model,
+    QWidget *parent)
     : QWidget{parent}
     , m_model{model}
 {
@@ -19,6 +21,9 @@ void AddOperatorButton::mousePressEvent(QMouseEvent *event)
     OperatorEditorDialog* dialog
         = new OperatorEditorDialog(m_model, nullptr, this);
     dialog->show();
+
+    connect(dialog, &OperatorEditorDialog::retrieveCountryCodeByMcc,
+            m_model.get(), &CountriesOperatorsModel::getCountryCodeByMcc);
 }
 
 void AddOperatorButton::paintEvent(QPaintEvent *event)

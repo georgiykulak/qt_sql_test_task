@@ -41,7 +41,8 @@ struct Country
                const QRect& rect,
                const QPalette &palette) const;
     QSize sizeHint() const;
-    QString iconFileName() const;
+
+    static QString iconFileName(const QString& code);
 };
 Q_DECLARE_METATYPE(Country);
 const int kCountryMetaId = qRegisterMetaType<Country>();

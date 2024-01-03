@@ -12,7 +12,7 @@ public:
     using QStyledItemDelegate::QStyledItemDelegate;
 
     explicit TreeIconTextDelegate(
-        std::shared_ptr<QAbstractItemModel> rootModel,
+        std::shared_ptr<CountriesOperatorsModel> rootModel,
         QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -30,7 +30,7 @@ public:
                       const QModelIndex &index) const override;
 
 private:
-    std::shared_ptr<QAbstractItemModel> m_rootModel;
+    std::shared_ptr<CountriesOperatorsModel> m_rootModel;
 };
 
 #endif // TREEICONTEXTDELEGATE_HPP

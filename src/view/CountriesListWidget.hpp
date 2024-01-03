@@ -16,7 +16,7 @@ class CountriesListWidget : public QTreeView
 {
     Q_OBJECT
 public:
-    CountriesListWidget(std::shared_ptr<QAbstractItemModel> model,
+    CountriesListWidget(std::shared_ptr<CountriesOperatorsModel> model,
                         QWidget *parent = nullptr);
     ~CountriesListWidget();
 
